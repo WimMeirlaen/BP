@@ -1,0 +1,171 @@
+%---------- Inleiding ---------------------------------------------------------
+
+% TODO: Is dit voorstel gebaseerd op een paper van Research Methods die je
+% vorig jaar hebt ingediend? Heb je daarbij eventueel samengewerkt met een
+% andere student?
+% Zo ja, haal dan de tekst hieronder uit commentaar en pas aan.
+
+%\paragraph{Opmerking}
+
+% Dit voorstel is gebaseerd op het onderzoeksvoorstel dat werd geschreven in het
+% kader van het vak Research Methods dat ik (vorig/dit) academiejaar heb
+% uitgewerkt (met medesturent VOORNAAM NAAM als mede-auteur).
+% 
+
+\section{Inleiding}%
+\label{sec:inleiding}
+
+Effectieve documentatie is cruciaal voor het functioneren van IT-infrastructuurteams. Echter, veel organisaties kampen met verspreide, inconsistente en verouderde documentatie, wat leidt tot inefficiëntie en kennisverliezen~\autocite{Abbas2022}.
+
+\subsection{Kadering en doelgroep}
+
+Dit onderzoek situeert zich binnen knowledge management en documentatiebeheer voor IT-infrastructuurteams, specifiek toegespitst op het Modern Workplace Infrastructure-team van ESC bv. De doelgroep omvat system administrators, infrastructure engineers en IT-managers die verantwoordelijk zijn voor kennisbeheer.
+
+\subsection{Probleemstelling}
+
+Bij ESC bv is de documentatie van het Modern Workplace Infrastructure-team verspreid over verschillende platformen, inconsistent en vaak niet up-to-date. Dit resulteert in problemen bij onboarding van nieuwe teamleden, tijdverlies bij het zoeken naar informatie, en inefficiënte kennisoverdracht~\autocite{Walker2007}.
+
+\subsection{Onderzoeksvraag}
+
+De centrale onderzoeksvraag luidt: \textbf{Hoe kan verspreide, inconsistente en vaak verouderde documentatie bij ESC bv geautomatiseerd, gecentraliseerd en gesynchroniseerd worden binnen het team van Modern Workplace Infrastructure, zodat de efficiëntie bij onboarding, kennisdeling en operationele opvolging geoptimaliseerd kan worden?}
+
+Deze hoofdvraag wordt ondersteund door volgende deelvragen:
+
+\textbf{Probleemdomein:}
+\begin{itemize}
+  \item Hoe kan binnen een termijn van 2 weken inconsistente documentatie binnen het team van Modern Workplace Infrastructure ge\-ïdentificeerd worden en kan dit proces geautomatiseerd worden?
+  \item Hoe kunnen de noden van de teamleden binnen een termijn van 4 weken in kaart gebracht worden?
+  \item Welke gecentraliseerde tools worden momenteel gebruikt en hoe kan binnen een termijn van 12 weken een gegronde keuze gemaakt worden voor één systeem?
+\end{itemize}
+
+\textbf{Oplossingsdomein:}
+\begin{itemize}
+  \item Hoe kan binnen de stageperiode bestaande documentatie automatisch geanalyseerd en gestructureerd worden, zodat hiaten en inconsistenties ge\-identificeerd kunnen worden?
+  \item Hoe kan de overstap gemaakt worden naar een gecentraliseerde en uniforme documentatie\-omgeving, en hoe kan dit blijvend onderhouden worden?
+\end{itemize}
+
+\subsection{Onderzoeksdoelstelling}
+
+Het concrete eindresultaat is een proof-of-con\-cept van een gecentraliseerde documentatie\-omgeving met volgende deliverables:
+
+\begin{itemize}
+  \item Analyse van de huidige documentatie\-situatie met identificatie van hiaten
+  \item Onderbouwd advies voor een documentatie\-platform (Share\-Point, Confluence)
+  \item Python/\allowbreak Power\-Shell scripts voor inventari\-satie, meta\-data-extractie en duplicaat\-detectie
+  \item Git repository met versiebeheer voor documentatie
+  \item CI/CD pipeline voor geautomatiseerde validatie en deployment
+  \item Synchronisatie-scripts tussen Git en het gekozen platform
+  \item Validation framework met automated checks (formatting, metadata, broken links)
+  \item Logging en monitoring voor alle geautomatiseerde processen
+  \item Templates, richtlijnen en implementatie\-plan
+\end{itemize}
+
+De bachelorproef is succesvol wanneer de proof-of-concept aantoonbaar de efficiëntie verhoogt en positieve feedback krijgt van het team.
+
+%---------- Stand van zaken ---------------------------------------------------
+
+\section{Literatuurstudie}%
+\label{sec:literatuurstudie}
+
+\subsection{Knowledge Management en documentatiefragmentatie}
+
+\textcite{Abbas2022} tonen aan dat organisaties met verspreide en inconsistente documentatie significant lagere productiviteit ervaren. Kritieke succesfactoren zijn: centralisatie, uniforme structuur, regelmatige updates en toegankelijkheid.
+
+\textcite{Bento2020} onderzoeken organisatorische silo's en hun impact op kennisdeling. Verspreide documentatie is vaak het gevolg van verschillende teams die eigen systemen hanteren. Het onderzoek benadrukt dat centralisatie gecombineerd moet worden met cultuurverandering en continu onderhoud.
+
+\subsection{Best practices en technologieën}
+
+\textcite{Walker2007} beschrijft best practices voor document\-consolidatie: grondige inventarisatie vooraf, duidelijke taxonomie, meta\-data-standaarden, versie\-beheer en automatisering voor duplicaat\-detectie.
+
+Voor gecentraliseerde documentatie komen verschillende platformen in aanmerking. Share\-Point Online integreert goed met Microsoft 365 en ondersteunt auto\-matisering via Power Automate. Confluence (Atlassian) biedt flexibele mogelijkheden voor technische documentatie. One\-Note is meer informeel en mist enterprise governance-features.
+
+\subsection{DevOps voor documentatie}
+
+"Docs as Code" behandelt documentatie met dezelfde rigor als broncode: Git versiebeheer, automated testing en CI/CD. CI/CD pipelines kunnen validaties uitvoeren zoals Markdown linting, broken links detection en metadata checks via tools zoals GitHub Actions of Azure DevOps.
+
+Python en Power\-Shell zijn geschikt voor documentatie-automation. Python biedt libraries voor API-inte\-gratie en data-analyse, Power\-Shell integreert met Microsoft Graph API. Monitoring via Azure Application Insights of ELK stack zorgt voor traceer\-baarheid.
+
+\subsection{Kennishiaat}
+
+Er bestaat weinig onderzoek specifiek gericht op Modern Workplace Infrastructure-teams bij middelgrote IT-dienstverleners. Ook de toepassing van DevOps-praktijken (CI/CD, automated testing) voor documentatiebeheer is onderbelicht. Dit onderzoek ontwikkelt een geïntegreerde, praktijkgerichte oplossing met nadruk op technische automatisering.
+
+%---------- Methodologie ------------------------------------------------------
+\section{Methodologie}%
+\label{sec:methodologie}
+
+Dit onderzoek volgt een praktijkgerichte aanpak die elementen combineert van requirements-analyse, vergelijkende studie en de ontwikkeling van een proof-of-concept. De methodologie is opgedeeld in vijf fasen binnen een periode van 12 weken, elk met specifieke technieken, deliverables en tijdschatting.
+
+\subsection{Fase 1: Inventarisatie en audit (1,5 weken)}
+
+Inventarisatie van alle locaties waar documentatie opgeslagen is (Share\-Point, One\-Drive, Teams, lokale drives). Ontwikkeling van Python-scripts met Microsoft Graph API voor geautomatiseerd scannen en extractie van meta\-data. Detectie van duplicaten via file hashing (SHA-256) en data-analyse met pandas. SQLite database voor opslag, unit tests met pytest.
+
+\textbf{Deliverables:} Inventarisatierapport, Python/\allowbreak Power\-Shell scripts, database met metadata.
+
+\subsection{Fase 2: Requirements-analyse (2,5 weken)}
+
+Semi-gestructureerde interviews met teamleden, observatie van documentatiegebruik, analyse van use cases. Identificatie van must-have features.
+
+\textbf{Deliverables:} Requirements-document met user stories en geprioriteerde features.
+
+\subsection{Fase 3: Vergelijkende studie (2 weken)}
+
+Vergelijkingsmatrix voor Share\-Point Online, Confluence en alternatieven op basis van criteria zoals gebruiksvriendelijkheid, integratie, automatiseringsmogelijkheden en kosten. Praktische evaluatie via proof-of-concept voor top kandidaten.
+
+\textbf{Deliverables:} Vergelijkend rapport met onderbouwde platform\-keuze.
+
+\subsection{Fase 4: Ontwerp en ontwikkeling (4 weken)}
+
+Ontwerp van uniforme taxonomie, documentatietemplates en meta\-data-schema's. Implementatie van:
+
+\begin{itemize}
+  \item Git repository met branching strategy voor versiebeheer
+  \item CI/CD pipeline (GitHub Actions/\allowbreak Azure DevOps) voor validatie en deployment
+  \item Power\-Shell/\allowbreak Python synchronisatie-scripts tussen Git en Share\-Point
+  \item Validation framework: automated checks op formatting, metadata, broken links
+  \item Logging en monitoring (Azure Application Insights)
+  \item Scheduled automation via Azure Functions of Power\-Shell tasks
+\end{itemize}
+
+\textbf{Deliverables:} Werkende proof-of-concept met Git repository, CI/CD pipeline, automation scripts met unit tests, monitoring dashboard.
+
+\subsection{Fase 5: Evaluatie en implementatieplan (2 weken)}
+
+Usability testing met teamleden, feedback-sessies, KPI-metingen. Opstellen van onderhouds\-richtlijnen, implementatieplan en trainings\-materiaal.
+
+\textbf{Deliverables:} Evaluatierapport, implementatie\-plan, onderhouds\-richtlijnen, trainings\-materiaal.
+
+\subsection{Tijdsplanning overzicht}
+
+\begin{itemize}
+  \item Week 1-2: Fase 1 - Inventarisatie en audit
+  \item Week 3-5: Fase 2 - Requirements-analyse
+  \item Week 6-7: Fase 3 - Vergelijkende studie
+  \item Week 8-11: Fase 4 - Ontwerp en ontwikkeling
+  \item Week 12: Fase 5 - Evaluatie en implementatieplan
+\end{itemize}
+
+Deze aanpak garandeert voldoende technische diepgang door de ontwikkeling van scripts, automatisering en een werkende proof-of-concept, en zorgt tegelijk voor een praktisch toepasbaar resultaat dat direct waarde biedt aan ESC bv.
+
+%---------- Verwachte resultaten ----------------------------------------------
+\section{Verwacht resultaat, conclusie}%
+\label{sec:verwachte_resultaten}
+
+\subsection{Verwachte bevindingen}
+
+De inventarisatie zal naar verwachting 5-8 verschillende documentatie\-locaties identificeren met 30-40\% duplicaten of verouderde versies. Share\-Point Online zal waarschijnlijk als meest geschikte platform uit de vergelijkende studie komen gezien de integratie met Microsoft 365 en automatiserings\-mogelijkheden.
+
+\subsection{Verwachte proof-of-concept}
+
+Het eindresultaat omvat een gecentraliseerde Share\-Point site met hiërarchische structuur, templates, meta\-data-schema, Git repository, CI/CD pipeline voor validatie, synchronisatie-scripts, logging/\allowbreak monitoring dashboard en scheduled automation voor dagelijkse synchronisatie en periodieke audits.
+
+\subsection{Meetbare verbeteringen}
+
+Verwachte verbeteringen: 60-70\% reductie zoektijd, 40-50\% kortere onboarding, 90\%+ documentkwaliteit binnen 6 maanden, 80\%+ gebruikerstevredenheid. Technisch: 85\%+ automation coverage, 99\%+ sync success rate, 95\%+ validation pass rate.
+
+
+\subsection{Meerwaarde}
+
+Dit onderzoek levert ESC bv een werkende oplossing die operationele efficiëntie verhoogt, kennisbehoud garandeert, en schaalbaarheid mogelijk maakt. De ontwikkelde scripts en automation zijn herbruikbaar voor andere teams. Het technische luik (Python/PowerShell, CI/CD, Git) toont voldoende diepgang voor toegepaste informatica.
+
+Mogelijke afwijkingen: indien geen enkel platform volledig voldoet, kan een hybride oplossing overwogen worden. Bij complexere automatisering kan de scope aangepast worden naar semi-geautomatiseerde processen. De kernwaarde van centralisatie blijft behouden.
+
