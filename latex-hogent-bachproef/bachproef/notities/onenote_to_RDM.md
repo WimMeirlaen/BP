@@ -10,7 +10,7 @@ Er zijn verschillende doelstellingen:
 Er bestaan echter geen kant-en-klare oplossingen om dit te verwezenlijken.
 
 Bovendien kwamen reeds heel wat vraagstukken kijken bij de mogelijke aanpakken
-- om data uit OneNote te halen kan je gebruik maken van Microsoft Graph of van een COM communicator. Een laatste optie is om de data pagina per pagina manueel te exporteren, wat teveel tijd vraagt.
+- om data uit OneNote te halen kan je gebruik maken van Microsoft Graph of van een COM component. Een laatste optie is om de data pagina per pagina manueel te exporteren, wat teveel tijd vraagt.
   -- Probleem bij Microsoft Graph command line tools: hiervoor moet machtiging aangevraagd worden. Deze machtiging geeft je echter permissies op ALLE sharepoint-pagina's binnen het volledige bedrijf, wat niet de bedoeling is.
   --- Mogelijke oplossing: een machtiging aanvragen aan de admin die enkel voor één pagina gegeven wordt. Dit is goed om de correcte werking van scripts te testen, maar is geen goede oplossing binnen productie.
       Hier moet worden bekeken met de Sharepoint-beheerders wat een logischer oplossing zou zijn.
