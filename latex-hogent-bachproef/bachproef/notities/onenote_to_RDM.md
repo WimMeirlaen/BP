@@ -19,10 +19,10 @@ Bovendien kwamen reeds heel wat vraagstukken kijken bij de mogelijke aanpakken
      Deze werkwijze blijkt echter niet te lukken: het script vindt geen geopend notebook waardoor extractie niet mogelijk is.
      Pogingen om dit op te lossen waren: office-herstelmodule, restart van OneNote, restart van PC, maar de fout blijft.
      Mogelijke oorzaken kunnen zijn:
-        *** Windows security policies die COM automation blokkeren
-        *** Anti-virus software
-        *** Bepaalde Office/Windows configuraties
-        *** Corrupted COM registratie die zelfs repair niet fixt 
+  *** Windows security policies die COM automation blokkeren
+  *** Anti-virus software
+  *** Bepaalde Office/Windows configuraties
+  *** Corrupted COM registratie die zelfs repair niet fixt 
 
   -- Probleem met manuele verwerking: dit vraagt teveel tijd.
 
