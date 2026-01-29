@@ -17,7 +17,12 @@ Bovendien kwamen reeds heel wat vraagstukken kijken bij de mogelijke aanpakken
 
   -- Probleem met de COM component: deze werkwijze tracht om via COM de gegevens van een geopend notebook in de OneNote Desktop app te lezen.
      Deze werkwijze blijkt echter niet te lukken: het script vindt geen geopend notebook waardoor extractie niet mogelijk is.
-     Pogingen om dit op te lossen waren: office-herstelmodule, restart van OneNote, restart van PC, maar de fout blijft
+     Pogingen om dit op te lossen waren: office-herstelmodule, restart van OneNote, restart van PC, maar de fout blijft.
+     Mogelijke oorzaken kunnen zijn:
+        Windows security policies die COM automation blokkeren
+        Anti-virus software
+        Bepaalde Office/Windows configuraties
+        Corrupted COM registratie die zelfs repair niet fixt 
 
   -- Probleem met manuele verwerking: dit vraagt teveel tijd.
 
