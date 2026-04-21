@@ -1,0 +1,149 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram name="Page-1" id="aWe3XDvr2SyT9-hNI2ZS">
+    <mxGraphModel dx="2066" dy="1201" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-41" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="0. Quick Edit uitschakelen" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-42" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="IVIYCVhjWfK9Za9eeqdR-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="1. Scripts &amp;amp; config valideren" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-43" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="2. Devolutions.PowerShell module inladen" vertex="1">
+          <mxGeometry height="60" width="150" x="25" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-44" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="3. RDM datasource &amp;amp; vaults selecteren" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-45" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="4A. Basismap kiezen" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-13" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="4B. Klantfolders selecteren &amp;amp; vaults koppelen" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-18" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="4B1. Klantnaam afleiden" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-19" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="4B2. Vault fuzzy-matching" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-20" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="4B3. Mapping opslaan" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-12" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="560" />
+              <mxPoint x="410" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-16" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="IVIYCVhjWfK9Za9eeqdR-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-10" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="folder in queue?" vertex="1">
+          <mxGeometry height="80" width="80" x="260" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-48" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="5. Mappings review &amp;amp; bevestiging" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-30" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="IVIYCVhjWfK9Za9eeqdR-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="6. Import loop" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-21" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="ja" vertex="1">
+          <mxGeometry height="30" width="60" x="320" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="nee" vertex="1">
+          <mxGeometry height="30" width="60" x="220" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-31" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="6.1 Vault activeren" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-32" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="6.2&amp;nbsp; Export analyseren" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-33" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="6.3 Import uitvoeren" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-34" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="6.4 Retry gefaalde items" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-35" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="6.5 Toon resultaat per klant" vertex="1">
+          <mxGeometry height="60" width="120" x="240" y="940" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-36" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-23">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="1060" />
+              <mxPoint x="420" y="650" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-39" edge="1" parent="1" source="IVIYCVhjWfK9Za9eeqdR-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="IVIYCVhjWfK9Za9eeqdR-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-28" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="folder in queue?" vertex="1">
+          <mxGeometry height="80" width="80" x="260" y="1020" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="ja" vertex="1">
+          <mxGeometry height="30" width="60" x="320" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-38" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="7. samenvattingsrapport + logbestand gegenereerd" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="IVIYCVhjWfK9Za9eeqdR-40" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="nee" vertex="1">
+          <mxGeometry height="30" width="60" x="220" y="1030" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

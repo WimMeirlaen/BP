@@ -7,45 +7,242 @@
 
 % Pas na deze inleidende paragraaf komt de eerste sectiehoofding.
 
-Dit hoofdstuk bevat je literatuurstudie. De inhoud gaat verder op de inleiding, maar zal het onderwerp van de bachelorproef *diepgaand* uitspitten. De bedoeling is dat de lezer na lezing van dit hoofdstuk helemaal op de hoogte is van de huidige stand van zaken (state-of-the-art) in het onderzoeksdomein. Iemand die niet vertrouwd is met het onderwerp, weet nu voldoende om de rest van het verhaal te kunnen volgen, zonder dat die er nog andere informatie moet over opzoeken \autocite{Pollefliet2011}.
+Dit hoofdstuk bevat de literatuurstudie over kennismigratie, information overload en de rol van AI bij het beheer van bedrijfsinformatie.
+De inhoud bouwt voort op de inleiding en vormt de wetenschappelijke basis voor een geautomatiseerde migratie van OneNote naar RDM. Eerst wordt de belangrijkste migratiereden uitgewerkt vanuit PAM.
 
-Je verwijst bij elke bewering die je doet, vakterm die je introduceert, enz.\ naar je bronnen. In \LaTeX{} kan dat met het commando \texttt{$\backslash${textcite\{\}}} of \texttt{$\backslash${autocite\{\}}}. Als argument van het commando geef je de ``sleutel'' van een ``record'' in een bibliografische databank in het Bib\LaTeX{}-formaat (een tekstbestand). Als je expliciet naar de auteur verwijst in de zin (narratieve referentie), gebruik je \texttt{$\backslash${}textcite\{\}}. Soms is de auteursnaam niet expliciet een onderdeel van de zin, dan gebruik je \texttt{$\backslash${}autocite\{\}} (referentie tussen haakjes). Dit gebruik je bv.~bij een citaat, of om in het bijschrift van een overgenomen afbeelding, broncode, tabel, enz. te verwijzen naar de bron. In de volgende paragraaf een voorbeeld van elk.
+\section{Privileged Access Management als primaire migratiedrijfveer}
+\label{sec:pam-credential-beheer}
 
-\textcite{Knuth1998} schreef een van de standaardwerken over sorteer- en zoekalgoritmen. Experten zijn het erover eens dat cloud computing een interessante opportuniteit vormen, zowel voor gebruikers als voor dienstverleners op vlak van informatietechnologie~\autocite{Creeger2009}.
+Voor IT-dienstverleners die toegang beheren tot gevoelige klantomgevingen is Privileged Access Management (PAM) essentieel.
+PAM-systemen beheren bevoorrechte accounts en credentials op een gestructureerde manier, met beveiliging als basis en niet als toevoeging achteraf.
 
-Let er ook op: het \texttt{cite}-commando voor de punt, dus binnen de zin. Je verwijst meteen naar een bron in de eerste zin die erop gebaseerd is, dus niet pas op het einde van een paragraaf.
+\subsection{De PAM-aanpak}
+\label{subsec:pam-aanpak}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{grail.jpg}
-  \caption[Voorbeeld figuur.]{\label{fig:grail}Voorbeeld van invoegen van een figuur. Zorg altijd voor een uitgebreid bijschrift dat de figuur volledig beschrijft zonder in de tekst te moeten gaan zoeken. Vergeet ook je bronvermelding niet!}
-\end{figure}
+Privileged Access Management omvat het beheer en de beveiliging van accounts met verhoogde privileges binnen IT-systemen~\autocite[pp.~155--161]{garbis2021pam}. 
+In tegenstelling tot reguliere gebruikersaccounts hebben bevoorrechte accounts toegang tot kritieke systemen, configuraties en gevoelige data. \textcite{sizov2024pam} benadrukt dat inadequaat beheer van deze credentials een van de belangrijkste oorzaken is van moderne beveiligingsincidenten.
 
-\begin{listing}
-  \begin{minted}{python}
-    import pandas as pd
-    import seaborn as sns
+Bij traditionele benaderingen, zoals het opslaan van credentials in OneNote, ontbreekt de gestructureerde beveiliging die PAM-principes voorschrijven. 
+Wachtwoorden worden bewaard als platte tekst, er is geen logging van toegang, en er zijn geen mechanismen om credential misbruik te detecteren of te voorkomen.
 
-    penguins = sns.load_dataset('penguins')
-    sns.relplot(data=penguins, x="flipper_length_mm", y="bill_length_mm", hue="species")
-  \end{minted}
-  \caption[Voorbeeld codefragment]{Voorbeeld van het invoegen van een codefragment.}
-\end{listing}
+\subsection{Credential vaults en secure repositories}
+\label{subsec:credential-vaults}
 
-\lipsum[7-20]
+Een kerncomponent van PAM is de credential vault: een beveiligde repository waarin bevoorrechte credentials worden opgeslagen~\autocite[pp.~155--161]{garbis2021pam}. 
+In plaats van dat individuele medewerkers wachtwoorden kennen en beheren, worden deze centraal opgeslagen met strikte toegangscontroles. 
 
-\begin{table}
-  \centering
-  \begin{tabular}{lcr}
-    \toprule
-    \textbf{Kolom 1} & \textbf{Kolom 2} & \textbf{Kolom 3} \\
-    $\alpha$         & $\beta$          & $\gamma$         \\
-    \midrule
-    A                & 10.230           & a                \\
-    B                & 45.678           & b                \\
-    C                & 99.987           & c                \\
-    \bottomrule
-  \end{tabular}
-  \caption[Voorbeeld tabel]{\label{tab:example}Voorbeeld van een tabel.}
-\end{table}
+Volgens \textcite{souppaya2021pam} bieden credential vaults verschillende beveiligingsvoordelen:
+\begin{itemize}
+    \item \textbf{Centralisatie}: Alle credentials op één beveiligde locatie
+    \item \textbf{Encryptie}: Credentials worden versleuteld opgeslagen (at rest en in transit)
+    \item \textbf{Toegangscontrole}: Fijnmazige permissies bepalen wie welke credentials mag ophalen
+    \item \textbf{Rotatie}: Automatische wijziging van wachtwoorden volgens beleid
+    \item \textbf{Auditing}: Volledige logging van wie wanneer welke credentials heeft opgevraagd
+\end{itemize}
+
+Dit verschilt sterk van OneNote, waar credentials vaak als tekst tussen andere notities staan, zonder fijnmazige toegangscontrole of duidelijke audit trail.
+
+\subsection{Role-Based Access Control (RBAC)}
+\label{subsec:rbac-principe}
+
+Role-Based Access Control is een fundamenteel principe in moderne toegangsbeheersystemen waarbij permissies worden toegekend op basis van rollen binnen een organisatie, niet aan individuele gebruikers~\autocite[pp.~597--623]{blobel2006privilege}. 
+Een medewerker krijgt een rol toegewezen (bijvoorbeeld ``Junior Technicus Klant A'' of ``Senior Engineer Infrastructuur''), en die rol bepaalt welke systemen en gegevens toegankelijk zijn.
+
+\textcite[pp.~155--161]{garbis2021pam} beschrijven hoe RBAC in PAM-context de volgende voordelen biedt:
+
+\paragraph{Least-privilegeprincipe}
+Gebruikers krijgen alleen de minimale toegangsrechten die nodig zijn voor hun functie. 
+Een technicus die werkt aan de IT-omgeving van Klant A hoeft geen toegang te hebben tot credentials van Klant B. 
+Dit beperkt de impact van een eventueel beveiligingsincident.
+
+\paragraph{Scheiding van taken}
+Kritieke handelingen vereisen meerdere rollen. Bijvoorbeeld: een technicus kan een wijziging voorbereiden, maar een senior engineer moet deze goedkeuren voordat deze wordt uitgevoerd. 
+In OneNote is een dergelijke scheiding onmogelijk te implementeren.
+
+\paragraph{Schaalbaarheid}
+Bij aanname van een nieuwe medewerker wordt deze toegewezen aan bestaande rollen. Bij vertrek wordt de rol ingetrokken, en automatisch verliest de persoon toegang tot alle bijbehorende credentials en systemen. 
+In een OneNote-gebaseerde omgeving kan toegang ook via Teams- of SharePoint-groepen worden ingetrokken, maar die werkt meestal op site- of notebookniveau en minder fijnmazig op credential- of itemniveau. Daardoor blijft het risico groter dat gebruikers tijdens hun actieve toegangsperiode breder toegang krijgen dan operationeel nodig is; bij intrekking van die rechten vervalt die toegang uiteraard opnieuw.
+
+\subsection{Password vaulting en privileged session management}
+\label{subsec:pam-vaulting-psm}
+
+\textcite{garbis2021pam} leggen PAM in deze context vooral uit met twee praktische bouwstenen: \emph{password vaulting}~\autocite[pp.~155--156]{garbis2021pam} en \emph{privileged session management}~\autocite[pp.~157--158]{garbis2021pam}. 
+Bij password vaulting staan credentials centraal in een beveiligde kluis. Toegang verloopt gecontroleerd via aanvraag en goedkeuring (\enquote{checking out}). Wachtwoorden kunnen periodiek roteren wanneer die functie in het PAM-platform is geconfigureerd. In sommige gevallen logt het PAM-systeem de gebruiker automatisch in, zonder het wachtwoord te tonen.
+One-time passwords (OTP) versterken de aanmelding, maar zijn niet hetzelfde als de rotatie van het onderliggende accountwachtwoord.
+Bij privileged session management maakt een beheerder geen rechtstreekse verbinding meer met een server of systeem. De verbinding loopt via het PAM-systeem als tussenstap. Dat maakt het mogelijk om elke beheersessie op te volgen, te loggen en indien nodig te onderbreken.
+
+Dit biedt kritieke beveiligingsvoordelen:
+\begin{itemize}
+    \item Gebruikers kunnen credentials niet (per ongeluk) delen of opschrijven
+    \item Indien rotatie actief is, kunnen wachtwoorden automatisch worden gewijzigd zonder gebruikers te belasten
+    \item Bij vertrek van een medewerker hoeven wachtwoorden niet te worden gereset, alleen de toegangsrechten worden ingetrokken
+    \item Sessies kunnen worden opgenomen voor naleving van regels en forensische analyse
+\end{itemize}
+
+\textcite{sizov2024pam} benadrukt dat deze aanpak fundamenteel veiliger is dan het traditionele model waarbij credentials worden gedeeld en medewerkers deze kennen.
+
+\subsection{Audit trails en naleving}
+\label{subsec:pam-audit}
+
+PAM-systemen bieden uitgebreide logging en auditing die belangrijk zijn voor naleving van regelgeving zoals AVG/GDPR, NIS2 en branchespecifieke standaarden~\autocite{souppaya2021pam}.
+Elke interactie met bevoorrechte accounts wordt gelogd:
+
+\begin{itemize}
+    \item Wie heeft welke credential opgevraagd?
+    \item Wanneer en hoe lang was een sessie actief?
+    \item Welke acties zijn uitgevoerd tijdens de sessie?
+    \item Zijn er afwijkende patronen detecteerbaar (bijvoorbeeld toegang op ongebruikelijke tijden)?
+\end{itemize}
+
+Volgens \textcite[pp.~597--623]{blobel2006privilege} is zo'n audit trail niet alleen nuttig voor naleving, maar ook voor forensisch onderzoek en het opsporen van interne dreigingen.
+
+In OneNote is een dergelijke audit trail volledig afwezig. SharePoint logt weliswaar wie een pagina heeft geopend, maar niet wat er is gelezen, gekopieerd of verder verspreid. 
+Dit maakt het nagenoeg onmogelijk om te traceren wie toegang heeft gehad tot specifieke klantcredentials.
+
+\subsection{Praktijkvoorbeeld: Remote Desktop Manager}
+\label{subsec:rdm-praktijk}
+
+Tools zoals Remote Desktop Manager illustreren hoe deze PAM-principes in de praktijk kunnen worden toegepast voor IT-dienstverleners~\autocite{devolutions2025rdm}. 
+Dergelijke systemen implementeren credential vaults, RBAC, password vaulting, session recording en audit trails in een geïntegreerd platform, in lijn met de beschreven PAM-principes~\autocite{souppaya2021pam}. 
+Voor organisaties zoals E.S.C. BV die overwegen te migreren van OneNote naar een gestructureerder systeem, demonstreren zulke tools de praktische haalbaarheid van het toepassen van PAM-principes op dagelijkse IT-operaties.
+
+De belangrijkste meerwaarde zit niet in één tool, maar in de onderliggende principes: credentials gestructureerd beheren, toegang fijn afbakenen en veiligheid van bij het ontwerp meenemen.
+Die principes gelden zowel voor Remote Desktop Manager en gelijkaardige platformen voor klantdocumentatie als voor gespecialiseerde PAM-tools.
+
+Voor E.S.C. BV is net die bredere kijk belangrijk. De organisatie beheert niet alleen technische accounts, maar ook operationele kennis met een gelijkaardige impact. Een foutieve configuratiehandleiding, een oud wachtwoord of een onvolledige herstelprocedure kan in de praktijk even schadelijk zijn als een gedeelde login. Daarom is het logisch om documentatie niet los van PAM te behandelen, maar als deel ervan. Kennis is in deze context geen losse notitie, maar bedrijfskritische informatie die dezelfde discipline vraagt als andere gevoelige data.
+
+Daarom is de migratie van OneNote naar RDM meer dan een cosmetische herschikking. OneNote laat veel vrijheid toe, maar op schaal werkt die vrijheid vaak tegen de organisatie. Informatie wordt snel opgeslagen, maar niet altijd op een herbruikbare of controleerbare manier. RDM dwingt meer structuur af, zodat gegevens meteen in een bruikbare categorie terechtkomen. Net dat maakt de keuze voor RDM in deze bachelorproef inhoudelijk relevant, en niet enkel praktisch handig.
+
+\section{OneNote als kennismanagementsysteem}
+\label{sec:onenote-kennismanagement}
+
+Microsoft OneNote is een veelgebruikte tool voor notities en samenwerking binnen organisaties.
+Het platform wordt gebruikt voor onder meer probleemoplossingsgidsen, evaluaties na incidenten en teamdocumentatie~\autocite{hay2025onenote}.
+Die flexibiliteit maakt OneNote populair, maar zorgt ook voor uitdagingen rond informatiebeveiliging en gestructureerd beheer.
+
+Een belangrijk kenmerk van OneNote is dat notebooks zowel persoonlijk als gedeeld gebruikt kunnen worden.
+Die veelzijdigheid kan leiden tot ongecontroleerde verspreiding van gevoelige informatie.
+\textcite{hay2025onenote} wijzen erop dat ``notebook oversharing'' een groot probleem is geworden, waarbij vertrouwelijke bedrijfsinformatie onbedoeld toegankelijk wordt voor onbevoegde gebruikers.
+
+Met de introductie van AI-assistenten zoals Microsoft 365 Copilot is dit probleem groter geworden.
+In het AI-tijdperk volstaat het niet meer om te rekenen op verborgen of versnipperde informatie: AI kan alle toegankelijke informatie doorzoeken en tonen, ongeacht de locatie.
+Dit maakt het des te belangrijker om kennismanagement te structureren volgens duidelijke categorieën en toegangsrechten~\autocite{hay2025onenote}.
+
+Deze beveiligings- en structureringsproblemen zijn een belangrijke reden om te migreren naar meer gestructureerde systemen zoals RDM, waar informatie vanaf het begin gecategoriseerd en beveiligd wordt.
+
+In de praktijk heeft die verschuiving ook een menselijk voordeel. Wanneer informatie verspreid staat over losse notities, blijft kennis sterk persoonsgebonden: alleen wie de voorgeschiedenis kent, weet waar iets staat en waarom het op die plaats is beland. Een gestructureerd systeem verlaagt die afhankelijkheid van individuele medewerkers. Nieuwe teamleden kunnen sneller instappen omdat de informatie niet alleen beschikbaar is, maar ook logisch geordend is. Daarmee raakt de problematiek van OneNote niet alleen beveiliging en naleving, maar ook continuiteit van dienstverlening en overdraagbaarheid van kennis.
+
+\section{Sensitivity labeling in Microsoft 365}
+\label{sec:sensitivity-labeling}
+
+Microsoft heeft sensitivity labeling ingevoerd als belangrijke beveiligingsmaatregel voor data in Microsoft 365.
+Sensitivity labels bieden encryptie en beleidshandhaving, zodat content beschermd blijft, ook wanneer ze wordt verplaatst of gedeeld~\autocite{hay2025onenote}.
+Dat verschilt van traditionele permission-based security, die vooral bepaalt wie op een bepaald moment toegang heeft.
+
+\subsection{Het verschil tussen permissions en labeling}
+\label{subsec:permissions-vs-labeling}
+
+Permission-based beveiliging, zoals in SharePoint- en Teams-sites, regelt toegang op basis van rechten binnen een specifieke situatie.
+Wie permissie heeft op een SharePoint-site, kan in principe alle content op die site bekijken, inclusief OneNote-notebooks.
+In het AI-tijdperk heeft die aanpak duidelijke beperkingen.
+
+Sensitivity labeling voegt daarentegen een beveiligingslaag toe die met het document meereist.
+\textcite{hay2025onenote} leggen uit dat labeling bepaalt welke confidentialiteits- en beveiligingseisen AI-tools zoals Copilot moeten respecteren. 
+Labels helpen gebruikers ook om de gevoeligheid van content te begrijpen en ervoor te zorgen dat gegenereerde AI-responses met de gepaste voorzichtigheid worden behandeld.
+
+\subsection{Risico's van ongelabelde OneNote notebooks}
+\label{subsec:risicos-ongelabelde-notebooks}
+
+OneNote was tot voor kort de enige Microsoft 365-applicatie zonder ondersteuning voor sensitivity labels~\autocite{hay2025onenote}.
+Voor organisaties zoals E.S.C. BV, waar OneNote-notebooks verspreid staan over verschillende SharePoint-pagina's en Teams-sites zonder labeling, geeft dat belangrijke beveiligingsrisico's:
+
+\paragraph{Onbedoelde blootstelling van data door AI}
+Microsoft 365 Copilot kan alle informatie doorzoeken waartoe een gebruiker toegang heeft, ongeacht de locatie.
+Zonder sensitivity labels kan Copilot vertrouwelijke klantinformatie uit OneNote-notebooks oppikken en gebruiken in AI-antwoorden, zelfs wanneer de gebruiker niet wist dat die informatie bestond.
+Dit fenomeen wordt door \textcite{hay2025onenote} geïllustreerd met de metafoor van een ``vergiftigde appeltaart'': gebruikers moeten geïnformeerd worden wanneer Copilot zeer vertrouwelijke content gebruikt om een antwoord te genereren.
+
+\paragraph{Onbedoeld delen van gevoelige klantdata}
+In een omgeving met meerdere klanten, elk met een eigen SharePoint-site, kunnen medewerkers onbedoeld toegang krijgen tot notebooks van andere klanten.
+Zonder expliciete labeling is niet meteen duidelijk welke informatie strikt vertrouwelijk is.
+Dit verhoogt het risico op onbedoelde verspreiding van gevoelige IT-configuraties, credentials of incidentrapporten.
+
+\paragraph{Gebrek aan beleidshandhaving}
+Ongelabelde content kan niet worden afgedwongen via geautomatiseerd beveiligingsbeleid zoals data loss prevention (DLP), automatische versleuteling of beperkingen op extern delen.
+Dit betekent dat gevoelige klantinformatie mogelijk per ongeluk naar externe partijen kan worden verstuurd of op onveilige locaties kan worden opgeslagen.
+
+\paragraph{Uitdagingen rond naleving en controle}
+Voor IT-dienstverleners is het essentieel om aan te tonen dat klantdata volgens de geldende richtlijnen wordt beheerd.
+Zonder labeling is het moeilijk om te traceren welke informatie als vertrouwelijk moet worden beschouwd en of deze volgens de juiste procedures is behandeld.
+
+\subsection{Remote Desktop Manager als veiliger alternatief}
+\label{subsec:rdm-veiliger-alternatief}
+
+Op basis van productdocumentatie en PAM-richtlijnen kan RDM worden gezien als een meer gecontroleerde omgeving voor het beheren van klantinformatie dan een klassieke OneNote-opzet~\autocite{devolutions2025rdm,souppaya2021pam}. De kern ligt minder bij de toolnaam zelf en meer bij het werkmodel dat de tool afdwingt: informatie wordt gestructureerd opgeslagen, rechten worden fijnmaziger beheerd, en handelingen worden beter traceerbaar.
+
+Concreet betekent dit dat teams niet enkel sneller informatie terugvinden, maar ook beter kunnen aantonen wie toegang had tot welke gegevens en op welk moment. Dat is relevant voor operationele veiligheid en voor naleving van regels rond klantdata.
+
+Voor deze bachelorproef is vooral het verschil in beheersdiscipline belangrijk. In \mbox{OneNote} kan informatie gemakkelijk groeien zonder uniforme indeling. In een RDM-achtige vaultstructuur wordt al bij het opslaan gekozen onder welke klant, map en context een item valt. Daardoor wordt toegang gerichter toegekend en wordt de kans kleiner dat gevoelige informatie onbedoeld zichtbaar is voor een te brede groep.
+
+In een AI-context blijft dat verschil ook relevant: hoe beter informatie vooraf is afgebakend via rollen en mappenstructuur, hoe kleiner de kans dat AI-antwoorden gebaseerd zijn op data buiten de bedoelde scope van de gebruiker. Daarom kan de overstap van OneNote naar RDM in deze studie inhoudelijk worden beschouwd als een beveiligingsverbetering, niet louter als een gebruiks- of layoutwijziging.
+
+\section{Microsoft Graph API voor OneNote-datamontage}
+\label{sec:msgraph-onenote}
+
+Microsoft Graph API is de centrale REST-API voor Microsoft~365-resources, waaronder OneNote-notitieboeken~\autocite{msgraph2025notes}. Via Graph kunnen applicaties notitieboeken, secties en pagina's ophalen, inclusief de HTML-inhoud van elke pagina en de bijbehorende mediaresources zoals afbeeldingen en bijlagen.
+
+\subsection{Architectuur van de OneNote Graph API}
+\label{subsec:onenote-graph-endpoints}
+
+Via de OneNote Graph API zijn vier soorten objecten beschikbaar: notitieboeken, secties, pagina's en mediabestanden. Het startpunt is \texttt{/sites/\{site-id\}/onenote/}~\autocite{msgraph2025notes}. De belangrijkste eindpunten zijn:
+
+\begin{itemize}
+    \item \texttt{/notebooks}: alle notitieboeken op een site
+    \item \texttt{/sections}: secties binnen een notitieboek
+    \item \texttt{/pages}: pagina's binnen een sectie
+    \item \texttt{/pages/\{id\}/content}: de inhoud van een pagina als HTML
+    \item \texttt{/pages/\{id\}/resources/\{resourceId\}/content}: afbeeldingen en bijlagen bij een pagina
+\end{itemize}
+
+Een pagina lijkt in OneNote eenvoudig, maar bestaat achter de schermen uit meerdere onderdelen: de HTML-tekst, afbeeldingen en bijlagen die elk afzonderlijk moeten worden opgehaald~\autocite{msgraph2025notes}. Bij notitieboeken met veel media leidt dat tot een groot aantal afzonderlijke aanvragen naar de API.
+
+De API levert de ruwe inhoud, maar bepaalt zelf niet waar die in RDM terechtkomt. Dat moet het exportscript zelf regelen: elke pagina moet op de juiste plaats in de juiste klantvault worden geplaatst. Daar zit de kern van het automatiseringswerk in deze bachelorproef.
+
+\subsection{Authenticatie en autorisatie}
+\label{subsec:graph-auth}
+
+Voor toegang tot de OneNote Graph API wordt de appregistratie aangemeld via Microsoft Entra~ID (voorheen Azure Active Directory) en krijgt deze de nodige toegangsrechten~\autocite{microsoft2025entra}. In deze opzet loopt de toegang via gedelegeerde Graph-rechten: de app mag OneNote-inhoud lezen namens de uitvoerende gebruiker, maar die gebruiker krijgt daardoor niet automatisch toegang tot de volledige tenant. In de praktijk werd de toegang bovendien vooraf beperkt tot de relevante SharePoint-sites via \texttt{Admin-Grant-SharedSites-From-CSV.ps1}. Het \emph{least privilege}-principe blijft daarbij het uitgangspunt~\autocite{garbis2021pam}: de effectieve leesrechten zijn gekoppeld aan de sites waarvoor expliciet toegang is toegekend.
+
+\paragraph{Rechten van app en gebruiker}
+Microsoft Graph maakt een onderscheid tussen rechten die aan de app gekoppeld zijn en de toegang van de aangemelde gebruiker~\autocite{microsoft2025entra}. In deze bachelorproef werkt de app namens de gebruiker, maar de effectieve leesruimte blijft beperkt tot de SharePoint-sites waarvoor die gebruiker via \texttt{Admin-Grant-SharedSites-From-CSV.ps1} toegang kreeg. Daardoor kan de oplossing notitieboeken uitlezen binnen de toegewezen sites, zonder dat er sprake is van vrije toegang tot de volledige tenant.
+
+\paragraph{Aanmelding met code}
+Voor scriptomgevingen zonder interactieve webinterface volstaat aanmelding met een eenmalige code~\autocite{microsoft2025devicecode}. De gebruiker bevestigt de toegang zelf in de browser en het script krijgt daarna tijdelijk toegang namens die gebruiker. Voor deze bachelorproef is vooral dat functionele mechanisme relevant; de technische details van de aanmeldflow zijn hier minder belangrijk.
+
+\subsection{Throttling en API-limieten}
+\label{subsec:graph-throttling}
+
+Microsoft Graph API past throttling toe om overbelasting van de servers te voorkomen~\autocite{microsoft2025throttling}. Wanneer een toepassing te veel aanvragen doet binnen een bepaalde tijdspanne, retourneert de API een HTTP~429-statuscode (\emph{Too Many Requests}) met een \texttt{Retry-After}-header die aangeeft na hoeveel seconden opnieuw geprobeerd mag worden.
+
+Voor OneNote-migraties waarbij honderden pagina's en duizenden mediaresources sequentieel worden opgehaald, is throttling een belangrijk knelpunt. Een robuuste implementatie vereist:
+
+\begin{itemize}
+    \item \textbf{Adaptief vertragingsbeheer}: de vertraging tussen aanvragen dynamisch aanpassen op basis van throttle-responses
+    \item \textbf{Circuit breaker-patroon}: na een reeks opeenvolgende throttle-responses tijdelijk stoppen met aanvragen om de server te ontlasten
+    \item \textbf{Exponentiële back-off}: de wachttijd na elke throttle-response stapsgewijs verhogen
+    \item \textbf{Meerfasige herstelrondes}: mislukte aanvragen in meerdere rondes opnieuw proberen
+\end{itemize}
+
+\subsection{Beperkingen voor grootschalige migraties}
+\label{subsec:graph-beperkingen}
+
+Naast de brede rechtenset en throttling heeft de Graph OneNote API nog andere beperkingen die relevant zijn voor grootschalige migraties:
+
+\paragraph{Paginering}
+Grote notitieboeken worden niet in één keer teruggegeven, maar in kleinere delen. Daardoor moet de migratie de inhoud stap voor stap ophalen en verwerken, wat de uitvoering trager maakt~\autocite{msgraph2025notes}.
+
+\paragraph{Geen bulk content-ophaling}
+De inhoud van pagina's moet afzonderlijk worden opgehaald; er is geen mogelijkheid om meerdere pagina's tegelijk in één keer te verwerken. Ook dat maakt de migratie noodzakelijkerwijs opeenvolgend~\autocite{msgraph2025notes}.
+
+\paragraph{Tijdelijke resource-URLs}
+Media en bijlagen worden via tijdelijke verwijzingen opgehaald. Bij lange migraties moet de toegang daarom op tijd worden vernieuwd om onderbrekingen te vermijden~\autocite{msgraph2025notes}.
 

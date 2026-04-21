@@ -1,0 +1,117 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram name="Page-1" id="hHgl9uxmDfG6riQKHmR-">
+    <mxGraphModel dx="2066" dy="1201" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-44" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="1. Start deduplicatie analyse&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="120" x="30" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-45" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="2. Verzamel alle pagina&#39;s uit geselecteerde sites" vertex="1">
+          <mxGeometry height="60" width="120" x="30" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-15" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="3. bouw deduplicatie-index op sleutel: SectionName + PageTitle" vertex="1">
+          <mxGeometry height="60" width="120" x="30" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-16" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="TkHAQrCA_39ZmNgOiB-W-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-19" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-4" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="4b. meerdere pagina&#39;s&lt;br&gt;&amp;nbsp;met zelfde sleutel?" vertex="1">
+          <mxGeometry height="160" width="150" x="15" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-24" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-37">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="5. Markeer pagina als uniek" vertex="1">
+          <mxGeometry height="60" width="120" x="30" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-20" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="6. Sorteer kandidaten op LastModifiedDateTime&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="140" x="220" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-38" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="7. Selecteer nieuwste pagina voor export" vertex="1">
+          <mxGeometry height="60" width="140" x="220" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-29" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-26">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="187.5" y="790" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-13" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="TkHAQrCA_39ZmNgOiB-W-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="320" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="ja" vertex="1">
+          <mxGeometry height="30" width="60" x="140" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-30" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="TkHAQrCA_39ZmNgOiB-W-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="11. Exporteer selectedPages" vertex="1">
+          <mxGeometry height="60" width="120" x="127.5" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-47" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="12. Schrijf deduplication-metadata.csv" vertex="1">
+          <mxGeometry height="60" width="120" x="127.5" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="nee" vertex="1">
+          <mxGeometry height="30" width="60" x="180" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="4a. Verwerk huidige sleutel" vertex="1">
+          <mxGeometry height="60" width="120" x="30" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-36" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-33" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="10. Haal volgende sleutel op" vertex="1">
+          <mxGeometry height="60" width="120" x="227.5" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-40" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-37" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;8. Registreer metadata voor deze sleutel&amp;nbsp;&lt;span style=&quot;font-family: &amp;quot;Segoe WPC&amp;quot;, &amp;quot;Segoe UI&amp;quot;, sans-serif; text-align: start;&quot;&gt;(SelectedSite, LastModified, DuplicateCount, AlternateSites)&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="160" x="110" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-41" edge="1" parent="1" source="TkHAQrCA_39ZmNgOiB-W-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="TkHAQrCA_39ZmNgOiB-W-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-39" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="9. Nog sleutels in index?" vertex="1">
+          <mxGeometry height="80" width="80" x="147.5" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-42" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="ja" vertex="1">
+          <mxGeometry height="30" width="60" x="200" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-43" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="nee" vertex="1">
+          <mxGeometry height="30" width="60" x="80" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="TkHAQrCA_39ZmNgOiB-W-46" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="13. Einde deduplicatie-fase" vertex="1">
+          <mxGeometry height="60" width="120" x="127.5" y="990" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

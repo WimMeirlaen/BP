@@ -1,4 +1,4 @@
-%% University College Ghent (HOGENT) report/thesis class
+﻿%% University College Ghent (HOGENT) report/thesis class
 %%
 %% hogentreport.cls
 %%
@@ -167,6 +167,7 @@
     \DeclareLanguageMapping{english}{british-apa}
 \fi
 \RequirePackage{csquotes}
+\RequirePackage{fvextra}
 
 \RequirePackage[small,bf,nooneline,footnotesize]{caption}
 \RequirePackage[flushmargin,hang]{footmisc}
@@ -336,7 +337,7 @@
         not running XeLaTeX/LuaLaTeX: using native fonts}
 
     \RequirePackage[defaultfam,tabular,lining]{montserrat}
-    \RequirePackage{firamath}
+    \IfFileExists{firamath.sty}{\RequirePackage{firamath}}{\ClassWarning{\@classname}{firamath not found, using sfmath only}}
     \RequirePackage{sfmath} % Fallback sans serif math font
 
     \RequirePackage[T1]{fontenc}
@@ -394,7 +395,7 @@
             BoldItalicFont= *-BoldItalic]
 
         \setsansfont{Montserrat}[
-            Path = fonts/Montserrat/,
+            Path = ../fonts/Montserrat/,
             Extension = .otf,
             UprightFont = *-Regular,
             BoldFont=*-Bold,
@@ -402,19 +403,15 @@
             BoldItalicFont= *-BoldItalic]
     }
 
-    \IfFontExistsTF{Fira Code}{%
-            \setmonofont{Fira Code}[StylisticSet={1,3}]
-            %% Shapely l, upright quotes, striked zeroes
-
-    }{%
-            \setmonofont{Fira Code}[
-                Path = fonts/FiraCode/,
-                Extension = .otf,
-                UprightFont = *-Regular,
-                BoldFont=*-Bold,
-                ItalicFeatures = FakeSlant,
-                BoldItalicFeatures = FakeSlant]
-    }
+    \setmonofont{Fira Code}[
+        Path = ../fonts/FiraCode/,
+        Extension = .otf,
+        UprightFont = FiraCode-Regular,
+        BoldFont = FiraCode-Bold,
+        ItalicFont = FiraCode-Regular,
+        BoldItalicFont = FiraCode-Bold,
+        ItalicFeatures = {FakeSlant=0.2},
+        BoldItalicFeatures = {FakeSlant=0.2}]
 
     % Use a unicode-compliant sans serif math font
     \IfFontExistsTF{Fira Math Regular}{%
@@ -422,10 +419,10 @@
         \setmathfont{Fira Math Regular}[FakeSlant, range={bfit->it}]
     }{%
         \setmathfont{FiraMath-Regular.otf}[
-            Path = fonts/FiraMath/,
+            Path = ../fonts/FiraMath/,
             BoldFont=FiraMath-Bold.otf]
         \setmathfont{FiraMath-Regular.otf}[
-            Path = fonts/FiraMath/,
+            Path = ../fonts/FiraMath/,
             FakeSlant,
             range={bfit->it}]
     }
@@ -434,9 +431,11 @@
 
 \fi
 
-%% Use the length of the 'HO' part of the logo to set the padding of the logo
+\graphicspath{{../graphics/}}
+
+%% Use the length of the logo to set the padding of the logo
 \newsavebox{\logopart}
-\savebox{\logopart}{\includegraphics[height=2cm]{logopart}}
+\savebox{\logopart}{\includegraphics[height=2cm]{HOGENT_Logo_Pos_rgb}}
 
 %% We use A4 paper with slightly smaller margins than the default (scale = 0.7)
 \geometry{a4paper,hscale=0.75,vscale=0.8,headheight=14pt,asymmetric}
@@ -460,18 +459,18 @@
     
     \begingroup
       %% Print the title in the faculty color
-      \titlefont\color{title}\Huge\@title\@addpunct{.}\\
+      \titlefont\color{title}\Huge\@title.\\
       %% Optionally print a subtitle
       \ifx\@subtitle\@empty\else
         \bigskip
-        \subtitlefont\LARGE\@subtitle\@addpunct{.}
+        \subtitlefont\LARGE\@subtitle.
       \fi
       \hrule
     \endgroup
     \bigskip
     \begingroup
       %% Print the name of the author
-      \subtitlefont\Large\bfseries \@author\@addpunct{.}
+      \subtitlefont\Large\bfseries \@author.
     \endgroup
     
     \vfill
@@ -524,14 +523,14 @@
           \textbf{Academiejaar:}}{\textbf{Academic year:}} \@academicyear\\
     \fi
     \begingroup
-      \subtitlefont\bfseries\@departmentname\@addpunct{.}
+      \subtitlefont\bfseries\@departmentname.
     \endgroup
     
     %% Insert the HoGent logo
     \begin{tikzpicture}[remember picture, overlay]
       \node [anchor=south east, shift={(-\the\wd\logopart, \the\wd\logopart)}, inner sep=0, outer sep=0] (logo) at (current page.south east)%
       {%
-        \includegraphics[height=\the\ht\logopart]{hogent_logo}%
+        \includegraphics[height=\the\ht\logopart]{HOGENT_Logo_Pos_rgb}%
       };%
     \end{tikzpicture}
 

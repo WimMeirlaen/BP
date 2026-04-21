@@ -5,46 +5,110 @@
 \chapter{\IfLanguageName{dutch}{Inleiding}{Introduction}}%
 \label{ch:inleiding}
 
-De inleiding moet de lezer net genoeg informatie verschaffen om het onderwerp te begrijpen en in te zien waarom de onderzoeksvraag de moeite waard is om te onderzoeken. In de inleiding ga je literatuurverwijzingen beperken, zodat de tekst vlot leesbaar blijft. Je kan de inleiding verder onderverdelen in secties als dit de tekst verduidelijkt. Zaken die aan bod kunnen komen in de inleiding~\autocite{Pollefliet2011}:
+Effectieve kennisdeling en gestructureerd documentatiebeheer zijn cruciale pijlers voor de dagelijkse werking van IT-dienstverleners~\autocite{Abbas2022}. Wanneer klantinformatie verspreid is over meerdere systemen zonder duidelijke structuur of toegangsbeleid, leidt dit onvermijdelijk tot tijdverlies, kennisverliezen en verhoogde veiligheidsrisico's. Voor het Modern Workplace Infrastructure-team van E.S.C. BV is dit geen theoretisch vraagstuk, maar een concrete dagelijkse uitdaging.
 
-\begin{itemize}
-  \item context, achtergrond
-  \item afbakenen van het onderwerp
-  \item verantwoording van het onderwerp, methodologie
-  \item probleemstelling
-  \item onderzoeksdoelstelling
-  \item onderzoeksvraag
-  \item \ldots
-\end{itemize}
+E.S.C. BV is een IT-dienstverlener die infrastructuurbeheer verzorgt voor een groot klantenbestand. Over de jaren groeide de technische documentatie per klant --- netwerkschema's, credentials, serverconfigurataties, troubleshooting-handleidingen --- organisch aan in Microsoft OneNote. Dit platform was toegankelijk en laagdrempelig, maar de informatie verspreidde zich over meerdere, slecht afgebakende SharePoint-locaties. Intussen stapte het bedrijf over naar Remote Desktop Manager (RDM) van Devolutions als centraal beheerplatform. Daarmee rijst de vraag: hoe kunnen honderden klantdossiers op een geautomatiseerde, betrouwbare manier worden gemigreerd van OneNote naar RDM?
+
+Die vraag is in de praktijk belangrijker dan ze op het eerste gezicht lijkt. Voor een afzonderlijke klant lijkt het misschien haalbaar om informatie handmatig te herstructureren, maar op schaal groeit de complexiteit snel. Elke extra klant brengt opnieuw pagina's, bijlagen, historische notities en uitzonderingen mee. Zonder geautomatiseerde aanpak moet een medewerker telkens opnieuw bepalen waar informatie staat, welke pagina de recentste versie bevat en hoe die inhoud technisch correct naar RDM kan worden overgezet. Dat maakt migratie niet alleen traag, maar ook foutgevoelig. Een generieke oplossing moet daarom robuust genoeg zijn om met verschillen in structuur, paginavormgeving en bestandsbijlagen om te gaan.
+
+Daarom werd dit onderzoek niet opgevat als een louter technisch exportproject, maar als een oefening in procesoptimalisatie. De centrale uitdaging bestond erin om een reproduceerbare workflow te ontwerpen die voldoende veilig, voldoende snel en voldoende controleerbaar is om herhaaldelijk op verschillende klanten te worden toegepast. Dat betekent dat niet alleen de inhoud van de pagina's relevant is, maar ook de manier waarop de gegevens worden opgehaald, gevalideerd, hernoemd, gededupliceerd en uiteindelijk in RDM terechtkomen. De bachelorproef onderzoekt dus zowel het inhoudelijke doel als het operationele traject ernaartoe.
 
 \section{\IfLanguageName{dutch}{Probleemstelling}{Problem Statement}}%
 \label{sec:probleemstelling}
 
-Uit je probleemstelling moet duidelijk zijn dat je onderzoek een meerwaarde heeft voor een concrete doelgroep. De doelgroep moet goed gedefinieerd en afgelijnd zijn. Doelgroepen als ``bedrijven,'' ``KMO's'', systeembeheerders, enz.~zijn nog te vaag. Als je een lijstje kan maken van de personen/organisaties die een meerwaarde zullen vinden in deze bachelorproef (dit is eigenlijk je steekproefkader), dan is dat een indicatie dat de doelgroep goed gedefinieerd is. Dit kan een enkel bedrijf zijn of zelfs één persoon (je co-promotor/opdrachtgever).
+De doelgroep van dit onderzoek is het Modern Workplace Infrastructure-team van E.S.C. BV, bestaande uit consultants, support-medewerkers en projectleiders. De probleemstelling kent twee onderling verbonden dimensies.
+
+\subsection{Gefragmenteerde informatieopslag}
+
+Voor één klant kunnen notitieboeken zich op drie verschillende SharePoint-locaties bevinden:
+\begin{enumerate}
+  \item \textbf{Interne projectsites}: documentatie onder \texttt{/sites/P-\{klantnaam\}} die enkel voor intern gebruik bestemd is
+  \item \textbf{SharedWithCustomer-sites}: klantgerichte documentatie onder \texttt{/sites/P-\{klantnaam\}-Shared\-withcustomer}, bedoeld voor gedeeld gebruik met de klant
+  \item \textbf{Klantspecifieke A-sites}: per klant een aparte SharePoint-site onder \texttt{/sites/\{klantnummer\}}, aangeduid met het prefix \texttt{A-} gevolgd door de klantnaam. Deze sites bevatten overkoepelende klantinformatie en zijn te herkennen aan het klantnummer in de URL.
+\end{enumerate}
+
+Dit maakt het voor medewerkers tijdrovend en frustrerend om de juiste informatie terug te vinden. Voor zowel de gewone projectsites (\texttt{/sites/P-\{klantnaam\}}) als de SharedWithCustomer-sites geldt bovendien een extra drempel: medewerkers moeten eerst via Teams lid worden van het juiste klantteam voordat ze de bijhorende OneNote-notitieboeken kunnen openen. Nieuwe teamleden die worden ingewerkt voor een specifieke klant moeten op drie plaatsen zoeken, zonder garantie dat ze alles gevonden hebben~\autocite{tomsu2024infooverload}. Het risico op dubbele, tegenstrijdige of verouderde informatie is reëel.
+
+\subsection{Beveiligings- en governancetekortkomingen}
+
+OneNote had lange tijd geen ondersteuning voor sensitivity labels~\autocite{hay2025onenote}. Voor een IT-dienstverlener die gevoelige klantcredentials beheert, gaf dat duidelijke veiligheidsrisico's:
+
+\begin{itemize}
+  \item Credentials worden opgeslagen als platte tekst, zonder encryptie op record-niveau of toegangscontrole per item
+  \item Er is geen duidelijke logging: SharePoint toont wie een pagina opende, maar niet wat er precies werd gelezen of gekopieerd
+  \item Met de intrede van Microsoft~365 Copilot kan AI onbedoeld vertrouwelijke klantinformatie opvragen uit ongelabelde notitieboeken~\autocite{hay2025onenote}
+  \item Het principe van \emph{least privilege} is onmogelijk te handhaven: wie toegang heeft tot een SharePoint-site, heeft toegang tot alle inhoud ervan~\autocite{garbis2021pam}
+\end{itemize}
+
+In tegenstelling tot OneNote vertrekt Remote Desktop Manager van een meer gestructureerd model, waarbij informatie per klant in een vaste vaultstructuur wordt beheerd en gecombineerd wordt met toegangscontrole en logging~\autocite{devolutions2025rdm}. Die aanpak sluit aan bij PAM-principes zoals least privilege en auditability~\autocite{souppaya2021pam}.
+
+\subsection{Structurele tekortkomingen in de huidige RDM-inrichting}
+
+Naast het migratievraagstuk kende ook de bestaande RDM-omgeving bij E.S.C. BV bij de start van dit onderzoek twee structurele problemen die de efficiëntie en veiligheid ondermijnden:
+
+\begin{itemize}
+  \item \textbf{Bestaande klanten in een gedeelde default-vault (startsituatie)}: bij de start van deze bachelorproef zaten bestaande klanten in één gedeelde default-vault. Dit creëerde prestatieproblemen bij een grote hoeveelheid entries en ondermijnde de veiligheid: medewerkers met toegang tot de default-vault zagen automatisch de gegevens van \emph{alle} klanten daarin, wat ingaat tegen het least-privilege-principe~\autocite{garbis2021pam}. Tijdens het traject werden deze klanten stapsgewijs ondergebracht in individuele vaults, waardoor dit specifieke probleem intussen is weggewerkt.
+  \item \textbf{Vault aanmaken voor nieuwe klanten}: niet elke medewerker beschikt over de rechten om een nieuwe vault aan te maken in RDM wanneer een nieuw klantproject start. Dit creëert een bewuste afhankelijkheid van een beperkt aantal beheerders die hiervoor gemachtigd zijn.
+\end{itemize}
+
+Een volledige oplossing vereiste dus niet alleen de migratie van bestaande OneNote-inhoud, maar ook een herstructurering van de RDM-omgeving zelf: de migratie van klanten uit de default-vault naar individuele vaults, en een beleid voor wie vaults mag aanmaken. De eerste component werd tijdens deze bachelorproef operationeel gerealiseerd; voor de tweede bepaalt de RDM-beheerder wie het recht krijgt om vaults aan te maken.
+
+\subsection{Ontbreken van kant-en-klare migratiehulpmiddelen}
+
+Er bestaan geen standaardtools die de overgang van OneNote naar RDM automatisch uitvoeren. De drie beschikbare extractiemethoden voor OneNote-gegevens (Microsoft Graph API, COM-automatisering en handmatige export) brengen elk eigen uitdagingen en beperkingen met zich mee, zoals besproken in Hoofdstuk~\ref{ch:methodologie}.
+
+Dat gebrek aan kant-en-klare tooling verklaart waarom een proof-of-concept hier een meerwaarde heeft. De praktische realiteit is immers dat documentatie niet in één nette, uniforme vorm bestaat. Een migratietool moet omgaan met verspreide opslag, verschillende inhoudstypen en een organisatiecontext waarin rechten en toegangsbeheer net zo belangrijk zijn als de inhoud zelf. Voor E.S.C. BV is het doel daarom niet alleen om data te verplaatsen, maar om een werkbare basis te creëren voor een bredere administratieve standaardisering. De migratie naar RDM is in die zin ook een eerste stap naar een consequenter documentatiebeleid, waarin informatie beter vindbaar, beter beveiligd en beter onderhoudbaar wordt.
 
 \section{\IfLanguageName{dutch}{Onderzoeksvraag}{Research question}}%
 \label{sec:onderzoeksvraag}
 
-Wees zo concreet mogelijk bij het formuleren van je onderzoeksvraag. Een onderzoeksvraag is trouwens iets waar nog niemand op dit moment een antwoord heeft (voor zover je kan nagaan). Het opzoeken van bestaande informatie (bv. ``welke tools bestaan er voor deze toepassing?'') is dus geen onderzoeksvraag. Je kan de onderzoeksvraag verder specifiëren in deelvragen. Bv.~als je onderzoek gaat over performantiemetingen, dan 
+De centrale onderzoeksvraag luidt:
+
+\textbf{Hoe kan klantinformatie op een geautomatiseerde, veilige en schaalbare manier worden gemigreerd van Microsoft OneNote naar Remote Desktop Manager bij E.S.C. BV, rekening houdend met de beperkingen van de beschikbare API's en de beveiligingsvereisten van de organisatie?}
+
+\subsection{Deelvragen probleemdomein}
+
+\begin{itemize}
+  \item Welke structurele tekortkomingen heeft de huidige OneNote-gebaseerde kennisopslag voor gevoelige klantinformatie vanuit een veiligheids- en governanceperspectief?
+  \item Op welke SharePoint-locaties is klantinformatie verspreid binnen de Microsoft~365-tenant van E.S.C. BV, en hoe kan dit geautomatiseerd in kaart worden gebracht?
+  \item Welke beperkingen stelt Microsoft Graph API aan de extractie van OneNote-gegevens, en hoe verhouden deze zich tot de beveiligingsvereisten van de organisatie?
+\end{itemize}
+
+\subsection{Deelvragen oplossingsdomein}
+
+\begin{itemize}
+  \item Hoe kan een PowerShell-exportscript worden ontwikkeld dat OneNote-notitieboeken via Microsoft Graph API uithaalt, inclusief afbeeldingen en bijlagen, met correcte omgang met throttling en API-limieten?
+  \item Op welke manier kan geëxporteerde informatie worden ingeladen in de correcte klantvault in Remote Desktop Manager via de Devolutions PowerShell-module?
+  \item Hoe kan de authenticatie en autorisatie voor Microsoft Graph worden ingericht zodanig dat het migratieproces beheersbaar en beveiligd is?
+  \item Welke benadering is aangewezen voor de automatische categorisatie van geïmporteerde OneNote-inhoud, rekening houdend met privacyvereisten voor klantdata?
+\end{itemize}
 
 \section{\IfLanguageName{dutch}{Onderzoeksdoelstelling}{Research objective}}%
 \label{sec:onderzoeksdoelstelling}
 
-Wat is het beoogde resultaat van je bachelorproef? Wat zijn de criteria voor succes? Beschrijf die zo concreet mogelijk. Gaat het bv.\ om een proof-of-concept, een prototype, een verslag met aanbevelingen, een vergelijkende studie, enz.
+Het beoogde resultaat van deze bachelorproef is een werkende proof-of-concept van een geautomatiseerde migratiepipeline van OneNote naar RDM. Concreet omvat dit:
+
+\begin{itemize}
+  \item Een analyse van de beveiligingsproblemen en structurele tekortkomingen van OneNote als opslagplaats voor gevoelige klantinformatie bij IT-dienstverleners
+  \item Een vergelijkende evaluatie van de beschikbare extractiemethoden voor OneNote-gegevens (MS Graph API, COM-automatisering, handmatige export)
+  \item Een werkend PowerShell-exportscript dat notitieboekinhoud (tekst, afbeeldingen, bijlagen, subpagina's) extraheert via Microsoft Graph API
+  \item Een werkend PowerShell-importscript dat de geëxporteerde gegevens in de juiste klantvault in RDM plaatst
+  \item Een beschrijving van de vereiste authenticatieopzet in Microsoft Entra~ID en de bijbehorende beveiligingsoverwegingen
+  \item Een contextuele situering van de structurele tekortkomingen in de RDM-inrichting bij de start van het onderzoek (gedeelde default-vault en beperkte spreiding van vault-aanmaakrechten), met duidelijke grenzen van wat binnen deze bachelorproef is uitgewerkt
+  \item Aanbevelingen voor verdere uitrol en het omgaan met de geïdentificeerde beperkingen
+\end{itemize}
+
+De bachelorproef is succesvol wanneer de proof-of-concept aantoont dat de migratie voor minstens één klantvault volledig en correct kan worden uitgevoerd, met behoud van de informatiestructuur, de hiërarchie van secties en subpagina's, en de gekoppelde mediabestanden. Daarnaast moet de oplossing aantonen dat bulk-migraties in grote aantallen stabiel en langdurig kunnen draaien zonder gebruikers-input tijdens de run.
 
 \section{\IfLanguageName{dutch}{Opzet van deze bachelorproef}{Structure of this bachelor thesis}}%
 \label{sec:opzet-bachelorproef}
 
-% Het is gebruikelijk aan het einde van de inleiding een overzicht te
-% geven van de opbouw van de rest van de tekst. Deze sectie bevat al een aanzet
-% die je kan aanvullen/aanpassen in functie van je eigen tekst.
-
 De rest van deze bachelorproef is als volgt opgebouwd:
 
-In Hoofdstuk~\ref{ch:stand-van-zaken} wordt een overzicht gegeven van de stand van zaken binnen het onderzoeksdomein, op basis van een literatuurstudie.
+In Hoofdstuk~\ref{ch:stand-van-zaken} wordt een literatuurstudie gepresenteerd over de relevante domeinen: beveiligingsrisico's van ongestructureerde kennisopslag, Privileged Access Management en credential management, de technische achtergrond van Microsoft Graph API voor OneNote, en Remote Desktop Manager als doelplatform.
 
-In Hoofdstuk~\ref{ch:methodologie} wordt de methodologie toegelicht en worden de gebruikte onderzoekstechnieken besproken om een antwoord te kunnen formuleren op de onderzoeksvragen.
+In Hoofdstuk~\ref{ch:methodologie} wordt de methodologie toegelicht: de gefaseerde aanpak, de evaluatie van extractiemethoden, de authenticatieopzet in Entra~ID en de ontwikkeling van de migratiescripts.
 
-% TODO: Vul hier aan voor je eigen hoofstukken, één of twee zinnen per hoofdstuk
+In Hoofdstuk~\ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek.
 
-In Hoofdstuk~\ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein.
+De opbouw van deze bachelorproef is dus bewust praktijkgericht. Eerst wordt het probleem vanuit de praktijk gedefinieerd, daarna wordt de stand van zaken in het domein onderzocht, vervolgens wordt de gekozen methode stap voor stap verantwoord en ten slotte worden de resultaten kritisch samengevat. Die volgorde is relevant omdat de technische oplossing pas zinvol is wanneer ze in de context van de organisatie wordt bekeken. Een migratiescript dat op zichzelf werkt, maar de structuur, rechten of snelheid van de organisatie niet respecteert, is immers geen duurzame oplossing.

@@ -1,30 +1,853 @@
-%%=============================================================================
+﻿%%=============================================================================
 %% Methodologie
 %%=============================================================================
 
 \chapter{\IfLanguageName{dutch}{Methodologie}{Methodology}}%
 \label{ch:methodologie}
 
-%% TODO: In dit hoofstuk geef je een korte toelichting over hoe je te werk bent
-%% gegaan. Verdeel je onderzoek in grote fasen, en licht in elke fase toe wat
-%% de doelstelling was, welke deliverables daar uit gekomen zijn, en welke
-%% onderzoeksmethoden je daarbij toegepast hebt. Verantwoord waarom je
-%% op deze manier te werk gegaan bent.
-%% 
-%% Voorbeelden van zulke fasen zijn: literatuurstudie, opstellen van een
-%% requirements-analyse, opstellen long-list (bij vergelijkende studie),
-%% selectie van geschikte tools (bij vergelijkende studie, "short-list"),
-%% opzetten testopstelling/PoC, uitvoeren testen en verzamelen
-%% van resultaten, analyse van resultaten, ...
-%%
-%% !!!!! LET OP !!!!!
-%%
-%% Het is uitdrukkelijk NIET de bedoeling dat je het grootste deel van de corpus
-%% van je bachelorproef in dit hoofstuk verwerkt! Dit hoofdstuk is eerder een
-%% kort overzicht van je plan van aanpak.
-%%
-%% Maak voor elke fase (behalve het literatuuronderzoek) een NIEUW HOOFDSTUK aan
-%% en geef het een gepaste titel.
+Dit onderzoek heeft als doel een geautomatiseerde oplossing te ontwikkelen voor de migratie van klantinformatie van Microsoft OneNote naar Remote Desktop Manager (RDM) van Devolutions binnen E.S.C. BV. De aanpak bestaat erin een concrete oplossing te bouwen, die daarna ook te testen en te verbeteren, zodat een echt bedrijfsprobleem wordt opgelost~\autocite{Walker2007}. Het onderzoek verliep in vijf hoofdfasen.
 
-\lipsum[21-25]
+\section{Fase 1: Probleemanalyse en inventarisatie}
+\label{sec:fase1-probleemanalyse}
+
+De eerste fase bestond uit een gecombineerde literatuurstudie en situatie-inventarisatie. Enerzijds werd de wetenschappelijke en technische literatuur verkend rond information overload bij IT-specialisten~\autocite{tomsu2024infooverload}, beveiligingsproblemen van ongestructureerde kennisopslag~\autocite{hay2025onenote}, en Privileged Access Management~\autocite{garbis2021pam}. Anderzijds werd de concrete situatie bij E.S.C. BV in kaart gebracht:
+
+\begin{itemize}
+    \item Inventarisatie van de SharePoint-structuur: welke types locaties worden gebruikt voor klantdocumentatie (projectsites, SharedWithCustomer-sites, klantenhub)?
+    \item Analyse van de notitieboekstructuur per klant: secties, subpagina's, inhoudstypes
+    \item Identificatie van de informatiecategorieën die relevant zijn voor RDM (credentials, documentatie, netwerkinformatie, enz.)
+    \item Bespreking met teamleden over knelpunten in het zoeken naar informatie en de gewenste doelstructuur in RDM
+\end{itemize}
+
+Uit deze fase bleek dat de informatie voor één klant verspreid kan staan over meerdere SharePoint-sites, en dat de notitieboeken tekst, tabellen, afbeeldingen en bijlagen bevatten die allemaal correct gemigreerd moeten worden.
+
+Deze inventarisatie leverde drie directe ontwerpkeuzes op voor de migratie van OneNote naar RDM. Ten eerste moest de export meerdere sites per klant kunnen meenemen, omdat informatie vaak verspreid stond over projectsites en SharedWithCustomer-sites. Ten tweede moest de pipeline robuust omgaan met verschillen tussen klanten (meerdere notebooks, afwijkende naamgeving, overlap tussen interne en gedeelde documentatie) zonder manuele correcties per klant. Ten derde moest de oplossing herhaalbaar zijn voor bulkgebruik: niet enkel een geslaagde export voor één testklant, maar een consistente aanpak die voor meerdere klanten na elkaar werkt in productie.
+
+\textbf{Deliverable:} Een concreet beeld van de bronstructuur en de eisen waaraan de pipeline moet voldoen: multi-site export per klant, ondersteuning voor alle inhoudstypes (tekst, afbeeldingen, bijlagen, subpagina's), deduplicatie, throttlingbestendigheid, herhaalbaarheid zonder handmatige tussenkomst, gecontroleerde toegang en traceerbaarheid via logbestanden.
+
+\section{Fase 2: Evaluatie van extractiemethoden}
+\label{sec:fase2-extractiemethoden}
+
+Voordat scripts werden ontwikkeld, werden de beschikbare methoden om data uit OneNote te extraheren systematisch geëvalueerd.
+
+\subsection{Microsoft Graph API}
+\label{subsec:methode-graph}
+
+Microsoft Graph API biedt programmatische toegang tot OneNote-notitieboeken via REST-endpoints~\autocite{msgraph2025notes}. Voor deze aanpak is \texttt{Notes.Read.All} als gedelegeerde scope nodig. De precieze afbakening van rechten en de bijhorende veiligheidsmaatregelen worden gebundeld in \autoref{subsec:perms-delegated}.
+
+Voordelen: betrouwbare, gedocumenteerde API; ondersteuning voor alle inhoudstypes; geen nood aan een actieve Desktop-applicatie.
+
+Nadelen: brede permissies; agressieve throttling bij grootschalige operaties; elk media-element vereist een afzonderlijke HTTP-aanroep.
+
+\subsection{COM-automatisering via OneNote Desktop}
+\label{subsec:methode-com}
+
+Een alternatieve methode maakt gebruik van de COM-interface van de OneNote Desktop-applicatie. Via PowerShell kan een script de geopende notitieboeken in de OneNote-app uitlezen zonder netwerkpermissies.
+
+Bij tests in de E.S.C. BV-omgeving bleek deze methode echter onbetrouwbaar. Het script kon geen geopend notitieboek detecteren, ondanks pogingen met kantoorherstelmodule, herstart van OneNote en herstart van het systeem. Mogelijke oorzaken zijn Windows-beveiligingsbeleid dat COM-automatisering blokkeert, antivirussoftware die COM-aanroepen onderschept, of een beschadigde COM-registratie die niet wordt hersteld door de Office-herstelmodule.
+
+\subsection{Handmatige export}
+\label{subsec:methode-manueel}
+
+OneNote biedt ingebouwde exportfunctionaliteit per pagina of sectie. Voor een migratie van honderden klantdossiers met duizenden pagina's is dit echter te tijdrovend en foutgevoelig.
+
+\subsection{Keuze: Microsoft Graph API}
+\label{subsec:methode-keuze}
+
+Op basis van de evaluatie werd Microsoft Graph API geselecteerd als extractiemethode. De methode is technisch betrouwbaar en schaalbaar, maar vraagt een strikte rechtenafbakening. Daarom werd een expliciet rechtenmodel uitgewerkt met gedelegeerde permissies en gecontroleerde SharePoint-toegang per gebruiker (zie \autoref{subsec:perms-delegated}).
+
+Bij de keuze speelde ook mee of de oplossing in de praktijk goed bruikbaar was. Ze moest niet alleen werken, maar ook makkelijk opnieuw gebruikt kunnen worden door collega's. Graph API voldoet daaraan, omdat de aanpak goed te documenteren, te herhalen en te controleren is. Daarom bleef het, ondanks de beperkingen, de beste keuze.
+
+\section{Fase 3: Authenticatieopzet in Microsoft Entra ID}
+\label{sec:fase3-authenticatie}
+
+Voordat het exportscript kon worden gebruikt, moest een appregistratie worden aangemaakt in het Microsoft Entra~ID-portaal~\autocite{microsoft2025entra}. Dit was nodig omdat de Microsoft Graph API OAuth2-authenticatie vereist: het script kan niet rechtstreeks met een gebruikersnaam en wachtwoord inloggen, maar moet via een geregistreerde applicatie een access token aanvragen.
+
+\subsection{Appregistratie: naam en tenant-scope}
+\label{subsec:appreg-tenant}
+
+De applicatie werd geregistreerd onder de naam \texttt{OneNote-Bulk-Export} als \emph{single tenant}-applicatie. De keuze voor single tenant betekent dat de applicatie uitsluitend gebruikt kan worden door accounts binnen de eigen Microsoft~365-tenant van E.S.C. BV. Een multi-tenant configuratie zou de applicatie ook toegankelijk maken voor externe organisaties, wat voor een intern migratiehulpmiddel een onnodig veiligheidsrisico zou vormen.
+
+\subsection{Public client flow inschakelen}
+\label{subsec:public-client}
+
+De optie \emph{Allow public client flows} werd ingeschakeld in de Authentication-sectie van de appregistratie. Dit is een vereiste voor de OAuth2 device code flow die het exportscript gebruikt. Een \emph{public client} slaat geen clientgeheim (client secret) op: er is geen geheime sleutel die in het script zelf of in een configuratiebestand moet worden bewaard~\autocite{microsoft2025devicecode}. Dit staat in contrast met een \emph{confidential client}, waarbij een geheim wél moet worden bewaard en bij blootstelling (bv. door onbedoeld delen van het script) onmiddellijk een beveiligingsrisico oplevert.
+
+De optie \emph{Allow public client flows} werd ingeschakeld in de Authentication-sectie van de appregistratie. Dit is nodig voor de OAuth2 device code flow die het exportscript gebruikt. Een \emph{public client} bewaart geen clientgeheim. Er moet dus geen geheime sleutel in het script of in een configuratiebestand worden opgeslagen~\autocite{microsoft2025devicecode}. Bij een \emph{confidential client} is dat wel nodig, en dat verhoogt het risico wanneer zo'n geheim uitlekt.
+
+De device code flow werkt als volgt: het script vraagt een eenmalige code aan, toont die aan de gebruiker en wacht. De gebruiker opent daarna \texttt{https://microsoft.com/\allowbreak devicelogin} in de browser en meldt zich aan. Na die aanmelding krijgt het script een access token. Het wachtwoord zelf komt nooit in het script terecht.
+
+In de praktijk gebeurt dit met \texttt{Connect-MgGraph} en de parameter \texttt{-UseDeviceCode}, zoals te zien is in codefragment~\ref{lst:device-code-flow}.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+Connect-MgGraph -ClientId $ClientId `
+                 -TenantId $TenantId `
+                 -Scopes "Sites.Read.All","Notes.Read.All" `
+                 -UseDeviceCode `
+                 -ContextScope Process `
+                 -NoWelcome
+\end{lstlisting}
+\caption{Device code authenticatie in het exportscript}
+\label{lst:device-code-flow}
+\end{listing}
+
+\subsection{API-permissies: gedelegeerd, niet als applicatie}
+\label{subsec:perms-delegated}
+
+Deze bachelorproef hanteert één expliciet rechtenmodel voor de exportworkflow.
+
+\textbf{1) Rechten van de gebruiker}\
+De gebruiker krijgt \emph{geen} algemene tenantbrede leesrechten op OneNote toegewezen. De gebruiker ziet enkel sites waarvan hij lid is. Dit lidmaatschap wordt vooraf beheerd op de relevante SharedWithCustomer-sites.
+
+\textbf{2) Rechten van de app}\
+De appregistratie \texttt{OneNote-Bulk-Export} krijgt gedelegeerde Graph-scopes (zoals \texttt{Notes.Read.All}, \texttt{Sites.Read.All} en \texttt{User.Read}). In de huidige operationele configuratie is ook \texttt{Notes.ReadWrite.All} aanwezig voor compatibiliteit met de bestaande queue-pipeline.
+
+\textbf{3) Waarom de app deze rechten nodig heeft}\
+Microsoft Graph vereist de juiste toegangsrechten om OneNote-inhoud programmatisch te lezen. Zonder die rechten kan het script geen notitieboeken, pagina's en resources ophalen. De app heeft dus functionele Graph-toegang nodig, maar voert acties uit \emph{namens} de aangemelde gebruiker.
+
+\textbf{4) Effectieve afbakening van toegang}\
+De effectieve toegang is de doorsnede van (a) de gedelegeerde app-scopes en (b) de bestaande SharePoint-rechten van de gebruiker. Als de gebruiker geen toegang heeft tot een site, kan het script die site ook niet uitlezen.
+
+Figuur~\ref{fig:entra-permissions-bulk-export} toont de gedelegeerde Microsoft Graph-permissies van de gebruikte appregistratie.
+
+\begin{figure}[htbp]
+    \centering
+    \IfFileExists{../graphics/onenote-bulk-export-rechten.jpg}{%
+        \includegraphics[width=0.92\linewidth]{onenote-bulk-export-rechten.jpg}%
+    }{%
+        \fbox{\parbox{0.92\linewidth}{\centering Placeholder voor de toegekende Entra-rechten van de OneNote-bulk-exportapp.\\ Bestandsnaam: \texttt{onenote-bulk-export-rechten.jpg}}}%
+    }
+    \caption[Toegekende Entra-rechten voor de bulk-exportapp]{Gedelegeerde Microsoft Graph-permissies die in Microsoft Entra ID aan de appregistratie werden toegekend voor de OneNote-bulk-export.}
+    \label{fig:entra-permissions-bulk-export}
+\end{figure}
+
+\subsection{Admin consent}
+\label{subsec:admin-consent}
+
+Admin consent wordt eenmalig op tenantniveau verleend voor de appregistratie. Dit keurt het gebruik van de app goed, maar geeft gebruikers niet automatisch toegang tot alle klantsites. Zonder correct SharePoint-lidmaatschap blijft de export geblokkeerd voor die sites.
+
+\subsection{Operationele scriptvolgorde}
+\label{subsec:admin-sharepoint-access}
+
+De volledige migratie verloopt in vijf operationele stappen:
+
+\begin{enumerate}
+    \item Er wordt eerst een inventaris opgebouwd van relevante klantsites op basis van vaste selectiecriteria.
+    \item Vervolgens krijgt de exportgebruiker alleen toegang tot de sites die voor de migratie nodig zijn.
+    \item Daarna wordt de OneNote-inhoud per klant geëxporteerd naar een lokale, verwerkbare structuur.
+    \item De exportresultaten worden daarna geïmporteerd in de juiste klantvaults in RDM.
+    \item Tot slot volgt een nazorgstap waarbij de oude OneNote-omgeving wordt omgeleid naar de nieuwe documentatieplaats in RDM.
+\end{enumerate}
+
+Figuur~\ref{fig:complete-script-flow} toont deze vijf stappen schematisch.
+
+\begin{figure}[H]
+    \centering
+    \IfFileExists{../graphics/complete-script-flow.png}{%
+        \includegraphics[width=0.98\linewidth]{complete-script-flow.png}%
+    }{%
+        \fbox{\parbox{0.9\linewidth}{\centering Placeholder voor de volledige operationele flow van site-inventarisatie tot nazorg.\\ Bestandsnaam: \texttt{complete-script-flow.png}}}%
+    }
+    \caption[Volledige operationele migratieflow]{Volledige operationele migratieflow in vijf stappen.}
+    \label{fig:complete-script-flow}
+\end{figure}
+
+\textbf{Veiligheidsoverwegingen bij deze aanpak}
+\begin{itemize}
+    \item De migratie werkt altijd namens een aangemelde gebruiker. Ze kan nooit meer zien of doen dan die gebruiker zelf mag.
+    \item Enkel accounts binnen de eigen tenant kunnen de app gebruiken.
+    \item Sitetoegang wordt per gebruiker en per klant toegekend, alleen voor wat de exporttaak vereist.
+    \item De beheertools loggen wie toegang kreeg en waarvoor, wat traceerbaarheid garandeert.
+\end{itemize}
+
+\textbf{Deliverable:} Een geconfigureerde Entra~ID-appregistratie (\texttt{OneNote-Bulk-Export}) met gedelegeerde permissies en admin consent, en de nodige SharePoint-sitetoegang voor de exportgebruiker.
+
+\section{Fase 4: Ontwikkeling van de migratiescripts}
+\label{sec:fase4-scripts}
+
+\subsection{Exportscript: \texttt{Export-OneNote-Deduplicated.ps1}}
+\label{subsec:exportscript}
+
+\texttt{Export-OneNote-Interactive-Full.ps1} vormde de stabiele basisversie waarop verdere ontwikkeling werd gebouwd. Het script werkt interactief: de gebruiker geeft een zoekterm op (bijvoorbeeld een klantnaam), waarna het script alle overeenkomende SharePoint-sites opzoekt in een CSV-inventaris. Na authenticatie via Microsoft Graph worden de notitieboeken op die sites opgehaald en aan de gebruiker getoond ter bevestiging. Vervolgens voert het script de volledige export uit: pagina-inhoud inclusief tekst en opmaak, afbeeldingen en bijlagen als losse bestanden, checkboxes en de hiërarchie van hoofd- en subpagina's. Throttling-bescherming en een tweefasig herstelproces voor ontbrekende media zorgen ervoor dat de export ook bij grote notitieboeken betrouwbaar verloopt. Het resultaat is een mappenstructuur op schijf per sectie en pagina, klaar voor verdere verwerking.
+
+Tijdens verdere praktijktesten bleek echter dat klantinformatie vaak op meerdere sites dubbel aanwezig is (bijvoorbeeld dezelfde pagina op een projectsite en op een SharedWithCustomer-site). Daarom werd een verbeterde versie ontwikkeld: \texttt{Export-OneNote-Deduplicated.ps1}.
+
+Deze versie combineert interactieve siteselectie met intelligente deduplicatie. In eenvoudige termen: het script verzamelt eerst alle pagina's van de relevante sites, groepeert pagina's die inhoudelijk dezelfde titel/sectie vertegenwoordigen, en exporteert daarna alleen de meest recente versie. Zo wordt dubbele of driedubbele informatie niet meer mee gemigreerd.
+
+Een cruciale randvoorwaarde is dat alle gekende SharePoint-sites van een klant effectief worden meegenomen in de discoveryfase. In de praktijk kan een pagina uniek aanwezig zijn op slechts één site; wanneer die site niet gescand wordt, gaat die informatie verloren in de migratie. Door alle sites te scannen en daarna pas te dedupliceren, worden unieke pagina's behouden en wordt verspreide kennis samengebracht op één centrale plaats in RDM.
+
+Het script voert de volgende stappen uit:
+
+\begin{enumerate}
+    \item \textbf{Verbinding maken}: authenticatie via device code flow met de geconfigureerde Entra~ID-app, gevolgd door een initiële cooldown om throttling te vermijden bij de start van de sessie.
+    \item \textbf{Discovery over meerdere sites}: via een CSV-inventaris worden alle relevante klantensites opgezocht en gescand op notitieboeken, secties en pagina's.
+    \item \textbf{Deduplicatie-index opbouwen}: elke pagina krijgt een sleutel op basis van sectienaam en paginatitel. Pagina's met dezelfde sleutel worden als duplicaten behandeld.
+    \item \textbf{Nieuwste versie selecteren}: bij duplicaten wordt de pagina met de recentste \texttt{LastModifiedDateTime} gekozen voor export.
+    \item \textbf{Hiërarchische export uitvoeren}: de geselecteerde pagina's, media en parent-pagina's worden geëxporteerd met behoud van de structuur.
+    \item \textbf{Throttling-beheer}: het script past adaptief vertragingsbeheer toe~\autocite{microsoft2025throttling}:
+    \begin{itemize}
+        \item Minimale vertraging tussen aanvragen
+        \item Verhoogde vertraging bij HTTP~429-responses
+        \item Circuit breaker bij opeenvolgende throttle-responses
+        \item Herstelrondes: maximaal 6 rondes voor mislukte aanvragen, met toenemende wachttijden
+    \end{itemize}
+    \item \textbf{Transparantie}: het script schrijft \texttt{deduplication-metadata.csv} weg met per pagina de gekozen bron, wijzigingsdatum en duplicate-aantal.
+\end{enumerate}
+
+De technische kern van de deduplicatie staat in codefragmenten~\ref{lst:dedup-key}, \ref{lst:dedup-newest} en \ref{lst:dedup-metadata}.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$allPages += [PSCustomObject]@{
+    SectionName = $section.displayName
+    PageTitle = $page.title
+    LastModifiedDateTime = $page.lastModifiedDateTime
+    DeduplicationKey = "$($section.displayName)|$($page.title)"
+}
+\end{lstlisting}
+\caption{Opbouw van een deduplicatiesleutel per OneNote-pagina}
+\label{lst:dedup-key}
+\end{listing}
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$sorted = $pages | Sort-Object { [DateTime]::Parse($_.LastModifiedDateTime) } -Descending
+$newest = $sorted[0]
+$selectedPages += $newest
+\end{lstlisting}
+\caption{Selectie van de nieuwste versie bij duplicaten}
+\label{lst:dedup-newest}
+\end{listing}
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$metadataPath = Join-Path $exportRoot "deduplication-metadata.csv"
+$metadata | Export-Csv -Path $metadataPath -NoTypeInformation -Encoding UTF8
+\end{lstlisting}
+\caption{Wegschrijven van deduplicatie-metadata voor controle en audit}
+\label{lst:dedup-metadata}
+\end{listing}
+
+\textbf{Deliverable:} Exportmap per klant met unieke (gededupliceerde) HTML-pagina's en bijbehorende mediabestanden, georganiseerd in de originele hiërarchie van notitieboeken en secties.
+
+\subsection{Boomstructuur en parent-entiteiten}
+\label{subsec:boomstructuur}
+
+Naast deduplicatie moest ook de boomstructuur van OneNote intact blijven. Een notebook bestaat niet alleen uit bladeren, maar ook uit tussenliggende pagina's die zelf inhoud kunnen bevatten én tegelijk kinderen hebben. In RDM mogen die pagina's daarom niet verdwijnen tussen folderniveaus: ze moeten als parent-entry behouden blijven, zodat de onderliggende pagina's op dezelfde plaats terechtkomen als in OneNote. Figuur~\ref{fig:boomstructuur-rdm} toont die vergelijking tussen de bronstructuur links en het resultaat in RDM rechts.
+
+\begin{figure}[H]
+    \centering
+    \IfFileExists{../graphics/fig-09-boomstructuur-onenote-rdm.jpg}{%
+        \includegraphics[width=0.9\linewidth]{fig-09-boomstructuur-onenote-rdm.jpg}%
+    }{%
+        \fbox{\parbox{0.9\linewidth}{\centering Placeholder voor de boomstructuurvergelijking tussen OneNote en RDM.\\ Bestandsnaam: \texttt{fig-09-boomstructuur-onenote-rdm.jpg}}}%
+    }
+    \caption[Boomstructuur van OneNote naar RDM]{Vergelijking van de hiërarchie in het OneNote-notitieblok en de resulterende structuur in RDM. Parent-pagina's met eigen inhoud worden als entry behouden zodat de nesting identiek blijft aan de bronstructuur.}
+    \label{fig:boomstructuur-rdm}
+\end{figure}
+
+Het exportscript brengt de volledige paginastructuur in kaart voordat het importscript start. Het importscript gebruikt die informatie om te bepalen hoe elke pagina in RDM moet worden aangemaakt: als gewone documententry of als een entry met onderliggende subpagina's. Dat onderscheid is belangrijk: een pagina die zelf ook subpagina's heeft, moet als parent-entry bewaard blijven. Zonder die parent-entry gaat de inhoud van de pagina verloren of komt de nesting van de structuur niet overeen met het origineel.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$relative = $pageDir.FullName.Substring($section.FullName.Length).TrimStart('\\')
+$parentPath = if ($relative -like "*\\*") { Split-Path $relative -Parent } else { $null }
+
+$hasChildren = @(
+    Get-ChildItem $pageDir.FullName -Directory -ErrorAction SilentlyContinue |
+    Where-Object { Test-Path (Join-Path $_.FullName "page.html") }
+).Count -gt 0
+
+$items.Add([pscustomobject]@{
+    SourcePage      = $entryName
+    TargetFolder    = $targetFolder
+    HasChildren     = $hasChildren
+    HTMLFilePath    = $rdmHtmlPath
+})
+\end{lstlisting}
+\caption{Afleiding van parentpad en kinddetectie voor het behoud van de boomstructuur}
+\label{lst:boomstructuur-analyse}
+\end{listing}
+
+Codefragment~\ref{lst:boomstructuur-analyse} toont hoe het script per pagina bepaalt waar die in RDM terechtkomt en of die pagina zelf nog subpagina's heeft. Die twee gegevens worden samen met de paginanaam en het bronbestand bewaard als importmetadata. Het importscript gebruikt die metadata vervolgens om elke pagina op de juiste manier aan te maken in RDM.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+if ($item.HasChildren) {
+    Write-Host "    Page has children -> creating folder with attachments" -ForegroundColor Gray
+    $result = Add-AttachmentsToFolder -FolderPath $groupPath -FolderName $item.SourcePage -ItemData $item -UpdateIfExists:$UpdateHtmlIfExists
+    $resultTag = $result.Tag
+}
+\end{lstlisting}
+\caption{Keuze tussen folder-entry en document-entry op basis van onderliggende pagina's}
+\label{lst:boomstructuur-import}
+\end{listing}
+
+\subsection{Analysescript: \texttt{Analyze-Hydrex-Full.ps1}}
+\label{subsec:analysescript}
+
+Tijdens de ontwikkeling werd \texttt{Analyze-Hydrex-Full.ps1} voorzien als tussenstap om de exportmap te analyseren en HTML-bestanden te koppelen aan RDM-categorieën via \texttt{migration-config.json}. Dat configuratiebestand met categoriemappings (zoals \emph{Documentatie}, \emph{Credentials}, \emph{Netwerk} en \emph{Servers}) werd handmatig opgebouwd op basis van naamgevingspatronen in de OneNote-notitieboeken.
+
+In de effectieve migratieruns van deze case werd deze analysefase echter niet actief ingezet. De categorisatie op basis van dit analysescript behoort dus tot de onderzochte aanpak, maar niet tot de finaal gebruikte proof-of-concept flow.
+
+AI-gebaseerde categorisatie werd eveneens verkend als mogelijke vervolgstap, maar niet operationeel gebruikt in deze case:
+\begin{itemize}
+    \item \textbf{Azure OpenAI / Claude AI}: technisch bruikbaar voor inhoudsanalyse, maar minder wenselijk voor deze context omdat vertrouwelijke klantdata naar een externe cloudprovider zou worden verstuurd.
+    \item \textbf{Ollama (lokale LLM)}: privacyvriendelijk omdat de verwerking lokaal kan gebeuren, maar in de praktijktesten bleek de analysetijd per notitieboek te hoog voor de beoogde migratiesnelheid. Daarom werd ook deze piste niet geactiveerd in de uiteindelijke case-uitvoering.
+\end{itemize}
+
+Voor deze bachelorproef blijven Azure OpenAI en Ollama dus referentieopties voor toekomstig onderzoek, maar buiten scope van de effectief uitgevoerde migratieflow.
+
+\subsection{Importscript: \texttt{Bulk-Import-Client-ToRDM2.ps1}}
+\label{subsec:importscript}
+
+Het importscript verwerkt de geëxporteerde data en laadt deze in de juiste klantvault in RDM. De batchvariant \texttt{Bulk-Import-Client-ToRDM2.ps1} bouwt voort op de eerdere importlogica, maar legt meer nadruk op documentatie-integratie, opslagoptimalisatie en robuuste batchverwerking. De werking verloopt als volgt:
+
+\begin{enumerate}
+    \item \textbf{Mapkeuze}: via een grafische mappenbrowser (Windows Forms \texttt{FolderBrowserDialog}) selecteert de gebruiker de exportmap van de te importeren klant.
+    \item \textbf{Datasource selectie}: het script haalt alle beschikbare RDM-datasources op via de Devolutions.PowerShell-module en laat de gebruiker een schrijfbare datasource kiezen.
+    \item \textbf{Vault selectie}: op basis van de klantnaam (afgeleid uit de mapnaam) worden de beschikbare vaults gescoord op gelijkenis. Bij een score boven 85/100 wordt automatisch de beste match voorgesteld; anders kan de gebruiker handmatig zoeken of kiezen via een lijst.
+    \item \textbf{Importeren}: de geëxporteerde items worden via \texttt{Import-DataToRDM} ingevoerd in RDM als \emph{Notes}-entries in de correcte categoriemap van de vault. Bij herhaalde import kan de vlag \texttt{-UpdateHtmlIfExists} worden gebruikt om bestaande entries bij te werken.
+\end{enumerate}
+
+De automatische vaultvoorselectie gebeurt met een eenvoudige scorefunctie op naamgelijkenis, waarna de gebruiker expliciet bevestigt. Dit reduceert het risico op import in de verkeerde vault (codefragment~\ref{lst:import-vault-match}).
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$scored = $vaults | ForEach-Object {
+    [pscustomobject]@{ Vault = $_; Score = Score-Match -Left $searchTerm -Right $_.Name }
+} | Sort-Object Score -Descending
+
+if ($bestScore -ge 85) {
+    $selectedVault = $bestVault
+}
+\end{lstlisting}
+\caption{Automatische voorselectie van de RDM-vault op basis van naamscore}
+\label{lst:import-vault-match}
+\end{listing}
+
+Naast de basisimport werd een extra zoekbaarheidsstap geïntegreerd. In de praktijk bleek dat zoeken in RDM onvoldoende werkte wanneer informatie enkel in de HTML-bijlage stond. Daarom wordt de tekstuele inhoud van de OneNote-pagina tijdens de import ook toegevoegd aan de velden \emph{Description}, \emph{DescriptionRtf} en \emph{DocumentationTitle}, zodat gebruikers kunnen zoeken op inhoudstermen en niet alleen op titel.
+
+In \texttt{Bulk-Import-Client-ToRDM2.ps1} wordt deze uitgebreide import expliciet geactiveerd via de centrale importaanroep (codefragment~\ref{lst:import-client-call}). In de recente runtime wordt \texttt{page.rdm.html} bovendien alleen nog als bijlage bewaard wanneer de inline documentatie niet succesvol kan worden ingesteld. Zodra de documentation-editor wél gevuld is, verdwijnt die dubbele kopie, wat grofweg de helft van de opslag voor die pagina scheelt.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+Import-DataToRDM -Data $data `
+                 -DataSourceName $ds.Name `
+                 -VaultName $selectedVault.Name `
+                 -UpdateHtmlIfExists:$UpdateHtmlIfExists
+\end{lstlisting}
+\caption{Importaanroep in Bulk-Import-Client-ToRDM2.ps1}
+\label{lst:import-client-call}
+\end{listing}
+
+De zoekindexering zelf gebeurt in de importlogica die door dit script wordt aangeroepen: de geëxtraheerde platte tekst uit HTML wordt in \texttt{Description} en \texttt{DocumentationTitle} geplaatst, terwijl de leesbare HTML-variant in de documentation-editor terechtkomt (codefragment~\ref{lst:import-search-fields}).
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$description = Build-DocumentationDescription -ItemData $ItemData
+$Entry.Description = $description
+
+$searchText = Get-SearchableTextFromHtmlFile -HtmlPath $ItemData.HTMLFilePath -MaxChars 2000
+if (-not [string]::IsNullOrWhiteSpace($searchText)) {
+    $Entry.DocumentationTitle = $searchText.Substring(0, [Math]::Min($searchText.Length, 220))
+}
+\end{lstlisting}
+\caption{Toevoegen van inhoudstekst aan Description, DescriptionRtf en DocumentationTitle}
+\label{lst:import-search-fields}
+\end{listing}
+
+Daarnaast wordt een leesbare HTML-weergave in de documentation-editor geplaatst, zodat de inhoud niet alleen als bijlage bestaat maar ook direct in de entry zichtbaar en bruikbaar is (codefragment~\ref{lst:import-doc-body}).
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$docHtml = Build-DocumentationBodyHtml -ItemData $ItemData
+Set-RDMDocumentationBodyHtml -Entry $existing -HtmlBody $docHtml -PageName 'OneNote Import'
+\end{lstlisting}
+\caption{Vullen van de documentation-editor met tekstuele OneNote-inhoud}
+\label{lst:import-doc-body}
+\end{listing}
+
+Voor de effectieve zoekwerking moet in RDM ook de veldoptie \emph{Include descriptions in tags} ingeschakeld zijn. Zonder deze instelling wordt de toegevoegde description-tekst niet meegenomen in de tag-gebaseerde zoekindex.
+
+De recente batchruntime voorziet ook een optionele analysetrap waarin \texttt{Analyze-Hydrex-Full.ps1} HTML op lokale schijf kan herwerken (zoals beeldcompressie) vóór import. In de effectief uitgevoerde case van deze bachelorproef werd die extra analysetrap niet geactiveerd.
+
+\textbf{Deliverable:} Gevulde klantvault in RDM met alle gemigreerde informatie, georganiseerd per categorie.
+
+\section{Fase 5: Productiegerichte batchpipeline en ontwerpkeuzes}
+\label{sec:fase5-batchtopics}
+
+Na de eerste werkende pipeline werd de oplossing verder uitgebreid naar een productiegerichte batchaanpak met twee kernscripts: \texttt{Bulk-Export-OneNote-Queue.ps1} en \texttt{Bulk-Import-Client-ToRDM2.ps1}. In deze fase lag de nadruk op schaalbaarheid, fouttolerantie en leesbare operationele flow voor nachtverwerking.
+
+\subsection{Scriptstructuur en aanroepketen}
+\label{subsec:topic-script-structuur}
+
+De batchpipeline is bewust ontworpen volgens een \emph{queue-based execution model}, waarin alle gebruikersinteractie aan het begin van het script verloopt. Dit model stelt beide scripts in staat onbewaakt een lange periode uit te voeren zonder tussenkomst nodig te hebben.
+
+Bij de \textbf{exportfase} voert \texttt{Bulk-Export-OneNote-Queue.ps1} de volgende stappen uit:
+\begin{enumerate}
+    \item De gebruiker selecteert interactief alle OneNote-vaults (SharePoint-sites) waarvan gegevens geëxporteerd moeten worden
+    \item Deze vaults worden in een interne wachtrij (queue) opgenomen, samen met metagegevens over doellocatie en deduplicatielogica
+    \item Na deze initiële setup roept het script \texttt{Export-OneNote-Deduplicated-Queue.ps1} aan, die de vaults aaneengesloten verwerkt
+    \item Het script loopt onbewaakt door, onafhankelijk van verdere gebruikersinteractie
+    \item In praktijkdeployment werden deze exports vooral 's nachts ingepland, omdat batchverwerking dan geen verstoringen ervaart van wijzigingen aan de originele OneNote-notitieboeken door actieve gebruikers
+\end{enumerate}
+
+Bij de \textbf{importfase} hanteert \texttt{Bulk-Import-Client-ToRDM2.ps1} een identiek patroon:
+\begin{enumerate}
+    \item De gebruiker selecteert interactief welke klanten en exportmappen moeten worden geïmporteerd in RDM
+    \item Het script bouwt een wachtrij van deze klanten op, met vooraf bepaalde RDM-doelvaults en configuratiegegevens
+    \item De eigenlijke import wordt gedelegeerd aan \texttt{Import-ToRDM2.ps1}, die de vaults in de wachtrij aaneengesloten verwerkt
+    \item Gedurende de importrun wordt geen verdere gebruikersinteractie vereist; het script voert deduplicatie, groepstructuurcreatie, attachment-embedding en metadatamapping automatisch uit
+    \item RDM-documentatie, description-velden en losse bijlagen worden in één consistente importstroom samengebracht per klant
+\end{enumerate}
+
+Dit queue-based model is cruciaal voor robuuste bulkverwerking: het scheidt gebruikersinteractie (aan het begin) van de eigenlijk langdurige verwerking (server-side, onbewaakt), wat fouttolerantie en logtraceerbaarheid bevordert~\autocite{fowler2002patterns}. 
+
+Een aparte analysetrap met \texttt{Analyze-Hydrex-Full.ps1} werd wel voorzien, maar niet operationeel gebruikt in de finale case-uitvoering.
+
+\subsection{Operationele logging en crash-diagnostiek}
+\label{subsec:topic-logging-crash}
+
+Tijdens praktijktesten op de server bleek dat lange batchruns niet altijd stabiel eindigen: in sommige runs stopte het proces onverwacht of sloot het PowerShell-venster abrupt. Zonder persistente logging is dan onduidelijk welke klant al verwerkt was, op welke stap de run faalde, en wat de onderliggende foutmelding was. Daarom werd in zowel de export- als importbatch een doorlopende logstrategie ingebouwd.
+
+In \texttt{Bulk-Export-OneNote-Queue.ps1} wordt bij scriptstart een unieke logfile met timestamp aangemaakt. Elke statuslijn krijgt een niveau (\texttt{INFO}, \texttt{WARN}, \texttt{ERROR}, \texttt{SUCCESS}) en wordt onmiddellijk naar schijf geschreven, zodat ook bij een onverwachte stop de laatst uitgevoerde stap traceerbaar blijft (codefragment~\ref{lst:batch-logging-setup}).
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$script:LogDir = Join-Path $PSScriptRoot "logs"
+New-Item -ItemType Directory -Path $script:LogDir -Force | Out-Null
+$script:LogFile = Join-Path $script:LogDir "exportlog$(Get-Date -Format 'ddMMyyyyHHmmss').log"
+
+function Write-Log {
+    param(
+        [string]$Message,
+        [ValidateSet('INFO','WARN','ERROR','SUCCESS')][string]$Level = 'INFO'
+    )
+    $ts = Get-Date -Format 'dd/MM/yyyy HH:mm:ss'
+    $line = "[$ts] [$Level] $Message"
+    Add-Content -Path $script:LogFile -Value $line -Encoding UTF8
+}
+\end{lstlisting}
+\caption{Persistente logfile met niveaus in \texttt{Bulk-Export-OneNote-Queue.ps1}}
+\label{lst:batch-logging-setup}
+\end{listing}
+
+In \texttt{Bulk-Import-Client-ToRDM2.ps1} werd logging verder uitgebreid met gestructureerde faalregistratie per klant. Bij blijvende fouten na retry worden details niet alleen in de hoofdlog opgenomen, maar ook naar een aparte CSV weggeschreven. Daardoor kan na een crash of gedeeltelijke run gericht worden hervat op de niet-verwerkte of gefaalde items (codefragment~\ref{lst:batch-logging-failed-items}).
+
+\begin{listing}[H]
+\begin{lstlisting}
+$failedLogPath = Join-Path $failedLogRoot ("{0}-{1}-failed.csv" -f $runStamp, $safeCustomer)
+
+$importStats.FailedItems |
+    Select-Object @{n='Customer';e={$mapping.CustomerName}},
+                  @{n='Vault';e={$vault.Name}},
+                  SourcePage,
+                  TargetFolder,
+                  Category,
+                  Error |
+    Export-Csv -Path $failedLogPath -NoTypeInformation -Encoding UTF8
+
+Write-Log "[$currentIndex/$totalCount] Gefaalde items voor $($mapping.CustomerName):" 'ERROR'
+foreach ($fi in $importStats.FailedItems) {
+    Write-Log "  MISLUKT: $($fi.SourcePage) [$($fi.Category)] -> $($fi.Error)" 'ERROR'
+}
+\end{lstlisting}
+\caption{Gestructureerde registratie van resterende fouten in \texttt{Bulk-Import-Client-ToRDM2.ps1}}
+\label{lst:batch-logging-failed-items}
+\end{listing}
+
+Deze loggingaanpak verhoogt de operationele robuustheid van de batchpipeline: fouten worden achteraf reproduceerbaar geanalyseerd, de voortgang blijft zichtbaar bij onverwachte stops, en reruns kunnen gericht beperkt worden tot probleemitems in plaats van volledige herverwerking.
+
+\subsection{Fuzzy matching als kern-challenge}
+\label{subsec:topic-fuzzy-matching}
+
+In de exportqueue wordt de geselecteerde vaultnaam gebruikt als zoekterm om relevante SharePoint-sites te vinden. Die naam komt niet manueel uit een klantformulier, maar wordt afgeleid uit de gekozen RDM-vault. Het script zoekt vervolgens naar mogelijke site-matches, toont de beste resultaten en laat de gebruiker de juiste sites bevestigen.
+
+Een terugkerend probleem is dat vaultnamen, foldernamen en SharePoint-sites niet identiek zijn. Daarom gebruikt het exportscript een eenvoudige maar effectieve scorefunctie: eerst normaliseren, daarna exact match, substring-match en ten slotte woordoverlap.
+
+De kern van die scorelogica staat in codefragment~\ref{lst:batch-fuzzy-score}.
+
+\begin{listing}[H]
+\begin{lstlisting}
+function Score-Match {
+    param([string]$Left,[string]$Right)
+    $a = Normalize-Name $Left
+    $b = Normalize-Name $Right
+    if ($a -eq $b) { return 100 }
+    if ($a.Length -ge 4 -and $b.Length -ge 4) {
+        if ($a.Contains($b)) { return 95 }
+        if ($b.Contains($a)) { return 90 }
+    }
+    $aw = $a -split '\s+' | Where-Object { $_.Length -gt 2 }
+    $bw = $b -split '\s+' | Where-Object { $_.Length -gt 2 }
+    $common = ($aw | Where-Object { $bw -contains $_ }).Count
+    return [int][math]::Round(($common / [math]::Max($aw.Count,$bw.Count)) * 100, 0)
+}
+\end{lstlisting}
+\caption{Fuzzy matching voor automatische vault-voorselectie (\texttt{Bulk-Export-OneNote-Queue.ps1})}
+\label{lst:batch-fuzzy-score}
+\end{listing}
+
+Deze aanpak bleek in de praktijk snel en begrijpelijk voor operators. Bij twijfel blijft manuele bevestiging mogelijk, waardoor het risico op import in de verkeerde vault beperkt blijft. Een geanonimiseerde voorbeeldoutput van deze matchselectie staat in figuur~\ref{fig:fuzzy-top5}.
+
+\begin{figure}[htbp]
+    \centering
+    \IfFileExists{../graphics/fig-01-fuzzy-vault-selectie.png}{%
+        \includegraphics[width=0.9\linewidth]{fig-01-fuzzy-vault-selectie.png}%
+    }{%
+        \fbox{\parbox{0.9\linewidth}{\centering Placeholder voor een screenshot van de \emph{Top 5 matches}-output.\\ Bestandsnaam: \texttt{fig-01-fuzzy-vault-selectie.png}}}%
+    }
+    \caption[Vaultnaam als zoekterm]{Geanonimiseerde voorbeeldoutput van vaultnaam-naar-site-matching in de exportqueue.}
+    \label{fig:fuzzy-top5}
+\end{figure}
+
+\subsection{Onbewaakte batchverwerking en betrouwbaarheid}
+\label{subsec:topic-unattended-resilience}
+
+Voor nachtverwerking moet een script volledig onbewaakt kunnen draaien. De \texttt{Bulk-Export-OneNote-Queue.ps1} implementeert hiervoor een gestructureerde flow, weergegeven in figuur~\ref{fig:unattended-export-run}.
+
+\begin{enumerate}
+    \item \textbf{Interactieve voorbereiding} (stappen 1--3): gebruiker selecteert RDM-datasource, vaults en doelmappen.
+    \item \textbf{Sitebepaling met fallback}: na de initiële sitezoeking volgt een beslismoment (\enquote{sites gevonden}); bij geen match wordt eerst een manuele zoekterm ingevoerd.
+    \item \textbf{Definitieve siteselectie} (stap 4): de gevonden sites worden bevestigd via de CSV-selectie.
+    \item \textbf{Queue review} (stap 5): gebruiker bevestigt de volledige exportconfiguratie vóór de verwerking start.
+    \item \textbf{Exportloop per vault} (stappen 5.1--5.4): voor elk item in de queue automatisch:
+    \begin{itemize}
+        \item Verbinding maken met Microsoft Graph API
+        \item Sites scannen op hiërarchie en detecteren duplicaten
+        \item Export starten via \texttt{Export-OneNote-Deduplicated-Queue.ps1}
+        \item Bij HTTP~429 (throttling): 30 minuten cooldown, daarna automatische herpoging
+        \item Resultaat (succes/faal) registreren en volgende item verwerken
+    \end{itemize}
+    \item \textbf{Afronding} (stappen 8--9): samenvattingsrapport tonen en de lijst met succesvol verwerkte klanten bijwerken.
+\end{enumerate}
+
+Een klassiek Windows-probleem is dat ConHost pauzeert bij een muisklik op het venster (Quick Edit Mode). Het script schakelt dit expliciet uit aan de start:
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+try {
+    $consoleHelperCode = @"
+using System;
+using System.Runtime.InteropServices;
+public class ConsoleQuickEdit {
+    const uint ENABLE_QUICK_EDIT = 0x0040;
+    const uint ENABLE_EXTENDED_FLAGS = 0x0080;
+    // ... GetConsoleMode / SetConsoleMode ...
+}
+"@
+    if (-not ([System.Management.Automation.PSTypeName]'ConsoleQuickEdit').Type) {
+        Add-Type -TypeDefinition $consoleHelperCode
+    }
+    [ConsoleQuickEdit]::Disable()
+} catch { }
+\end{lstlisting}
+\caption{Quick Edit uitschakelen om onbewaakte runs robuust te maken}
+\label{lst:batch-unattended-quickedit}
+\end{listing}
+
+Door deze kleine ingreep stopt de batch niet meer onverwacht door gebruikersinteractie. In combinatie met automatische retry-stappen en throttle-afhandeling verhoogt dit de operationele betrouwbaarheid aanzienlijk.
+
+\begin{figure}[htbp]
+    \centering
+    \IfFileExists{../graphics/fig-02a-unattended-export-run.png}{%
+        \includegraphics[width=0.86\linewidth]{fig-02a-unattended-export-run.png}%
+    }{%
+        \fbox{\parbox{0.86\linewidth}{\centering Placeholder voor een onbewaakte export-run.\\ Bestandsnaam: \texttt{fig-02a-unattended-export-run.png}}}%
+    }
+    \caption[Procesflow onbewaakte export-run]{Flowchart van de procespijplijn in \texttt{Bulk-Export-OneNote-Queue.ps1}: van datasource-selectie tot export per vault en automatische 429-retry met 30-minuten cooldown.}
+    \label{fig:unattended-export-run}
+\end{figure}
+
+De import-run volgt een ander patroon dan de export: het script voert alle setup- en selectiefasen interactief uit aan het begin. Daarna worden alle geselecteerde klantfolders volledig automatisch verwerkt. De kern van de import-fase bestaat uit vier stappen per klant~(zie figuur~\ref{fig:unattended-import-run}):
+
+\begin{enumerate}
+    \item \textbf{Vault activeren}: De geselecteerde RDM-vault activeren zodat volgende imports daarin belanden.
+    \item \textbf{Exportdata voorbereiden}: De gededupliceerde exportmap inlezen en valideren als bron voor import.
+    \item \textbf{Import uitvoeren}: Per geëxporteerde pagina één HTML-document in de vault importeren, met optionele duplicate-detectie en intelligente foutafhandeling.
+    \item \textbf{Retry gefaalde items}: Wanneer items falen, kunnen ze opnieuw geprobeerd worden in parent-first volgorde (om folder-hiërarchie-problemen te voorkomen).
+\end{enumerate}
+
+Na afronding genereert het script een gedetailleerd samenvattingsrapport met logbestanden en een CSV per klant met resterende fouten (indien aanwezig).
+
+\begin{figure}[htbp]
+    \centering
+    \IfFileExists{../graphics/fig-02b-unattended-import-run.png}{%
+        \includegraphics[width=0.58\linewidth,height=0.82\textheight,keepaspectratio]{fig-02b-unattended-import-run.png}%
+    }{%
+        \fbox{\parbox{0.68\linewidth}{\centering Placeholder voor een onbewaakte import-run.\\ Bestandsnaam: \texttt{fig-02b-unattended-import-run.png}}}%
+    }
+    \caption[Procesflow onbewaakte import-run]{Flowchart van de batch import-pijplijn in \texttt{Bulk-Import-Client-ToRDM2.ps1}: van setup en config-validatie tot multi-select klantfolder-mapping en per-vault import met optionele retry.}
+    \label{fig:unattended-import-run}
+\end{figure}
+
+\subsection{Praktische serveropzet voor langdurige batchruns}
+\label{subsec:topic-server-setup-batchruns}
+
+Voor de operationele uitvoering over langere periodes werd door Internal IT een aparte server voorzien. Op die server kregen een beperkt aantal gebruikers de nodige lees- en schrijfrechten, en administratorrechten voor het uitvoeren van de migratiescripts. In de praktijk bleek die administratorcontext noodzakelijk om de scripts stabiel en volledig te laten doorlopen in deze omgeving.
+
+De keuze voor een vaste server is bewust gemaakt. Uitvoering vanaf een persoonlijke laptop is minder geschikt omdat die niet continu op het kantoornetwerk zit en thuisgebruik afhankelijk is van een actieve VPN-verbinding. Voor nachtverwerking en langere runs verhoogt dat het risico op onderbrekingen door netwerk- of sessieproblemen.
+
+De werkmethode verloopt in opeenvolgende golven:
+
+\begin{enumerate}
+    \item \textbf{Dag 1 (nacht):} een exportbatch voor ongeveer 50 klanten via \texttt{Bulk-Export-OneNote-Queue.ps1}.
+    \item \textbf{Dag 2:} import van diezelfde klantgroep naar RDM via \texttt{Bulk-Import-Client-ToRDM2.ps1}.
+    \item \textbf{Na import:} uitvoeren van \texttt{Replace-OneNotePages-WithRDMNotice.ps1} voor dezelfde klanten.
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\caption[Operationele dagplanning migratiebatch]{Praktische dagplanning voor servergebaseerde migratiegolven.}
+\label{tab:server-batch-dagplanning}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{0.12\linewidth}|p{0.18\linewidth}|p{0.32\linewidth}|p{0.20\linewidth}|}
+\hline
+\textbf{Moment} & \textbf{Fase} & \textbf{Script} & \textbf{Doel} \\
+\hline
+Dag 1 (nacht) & Export & \texttt{Bulk-Export-OneNote-Queue.ps1} & Ongeveer 50 klanten exporteren naar lokale bestanden \\
+\hline
+Dag 2 (overdag) & Import & \texttt{Bulk-Import-Client-ToRDM2.ps1} & Dezelfde klantgroep in RDM importeren \\
+\hline
+Direct na import & Nazorg & \texttt{Replace-OneNotePages-\allowbreak WithRDMNotice.ps1} & Oude OneNote-pagina's overschrijven met RDM-verwijzing \\
+\hline
+\end{tabular}
+\end{table}
+
+Het is belangrijk dat deze stappen kort op elkaar volgen. Hoe langer de periode tussen export, import en replace, hoe groter de kans dat gebruikers intussen nog nieuwe informatie in OneNote toevoegen. Daarom is de instructie aan betrokken gebruikers eenvoudig: vanaf de geplande migratiebatch geen nieuwe informatie meer in de betrokken OneNote-notitieboeken registreren en na de import uitsluitend in RDM werken.
+
+\subsection{Data integrity en duplicate detection}
+\label{subsec:topic-data-integrity-duplicates}
+
+Het exportscript voert duplicate-detectie uit voordat de effectieve export start. In \texttt{Export-OneNote-Deduplicated-Queue.ps1} worden alle pagina's eerst samengebracht in een deduplicatie-index op basis van \texttt{SectionName} en \texttt{PageTitle}. Wanneer meerdere sites dezelfde pagina bevatten, wordt alleen de recentste versie geëxporteerd. Zo blijft de export compact en worden dubbele pagina's al aan de bron weggefilterd.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$deduplicationIndex = Build-DeduplicationIndex -AllPages $allPagesFromAllSites
+$selectionResult = Select-NewestPages -DeduplicationIndex $deduplicationIndex
+
+$selectedPages = $selectionResult.Pages
+$metadata = $selectionResult.Metadata
+
+$metadataPath = Join-Path $ExportPath "deduplication-metadata.csv"
+$metadata | Export-Csv -Path $metadataPath -NoTypeInformation -Encoding UTF8
+\end{lstlisting}
+\caption{Duplicate-detectie en selectie van de nieuwste versie in de exportqueue}
+\label{lst:export-deduplicatie-selectie}
+\end{listing}
+
+In codefragment~\ref{lst:export-deduplicatie-selectie} wordt de deduplicatie in vier duidelijke stappen uitgevoerd. Eerst bouwt \texttt{\$deduplicationIndex = Build-DeduplicationIndex -AllPages \$allPagesFromAllSites} een index op basis van alle gevonden pagina's; pagina's met dezelfde sleutel (sectie + titel) komen in dezelfde groep terecht. Daarna kiest \texttt{Select-NewestPages} per groep precies één winnaar, namelijk de recentste versie. Het resultaat wordt opgesplitst in \texttt{\$selectedPages} (de pagina's die effectief geëxporteerd worden) en \texttt{\$metadata} (auditinformatie over welke alternatieven afvielen).
+
+Met \texttt{\$metadataPath = Join-Path \$ExportPath "deduplication-metadata.csv"} bepaalt het script waar het rapportbestand komt te staan. De laatste regel \texttt{Export-Csv} schrijft die metadata als CSV weg, zodat de export alleen de meest recente versie per pagina bevat en achteraf transparant verifieerbaar blijft welke site werd geselecteerd en hoeveel alternatieven zijn weggevallen.
+
+\begin{figure}[htbp]
+    \centering
+    \IfFileExists{../graphics/fig-03-duplicate-detectie-exportqueue.png}{%
+        \includegraphics[width=0.58\linewidth,height=0.78\textheight,keepaspectratio]{fig-03-duplicate-detectie-exportqueue.png}%
+    }{%
+            \fbox{\parbox{0.58\linewidth}{\centering Placeholder voor duplicate-detectie en selectie van de nieuwste exportpagina.\\ Bestandsnaam: \texttt{fig-03-duplicate-detectie-exportqueue.png}}}%
+    }
+    \caption[Duplicate-detectie in de exportqueue]{Flowchart en voorbeeldmatrix van duplicate-detectie op exportniveau: per \texttt{SectionName}/\texttt{PageTitle}-combinatie wordt alleen de recentste versie geselecteerd voor export.}
+    \label{fig:duplicate-retry-summary}
+\end{figure}
+
+Figuur~\ref{fig:duplicate-retry-summary} illustreert deze stappen visueel: van het groeperen van mogelijke duplicaten tot de selectie van precies één recentste versie per paginaklasse en de registratie in metadata.
+
+\subsection{API rate limiting en intelligent backoff}
+\label{subsec:topic-rate-limit-backoff}
+
+Bij Microsoft Graph-verkeer traden regelmatig 429-fouten op. In plaats van direct te falen, bouwt de queue een gecontroleerde cooldown in en probeert daarna opnieuw.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+} catch {
+    $errorMessage = $_.Exception.Message
+    $isThrottle = $errorMessage -match '429|Too Many Requests|throttle'
+
+    if ($isThrottle -and $attempt -lt $maxAttempts) {
+        Start-QueueThrottleCooldown -Seconds 1800 `
+            -Reason "429 tijdens queue item '$($item.VaultName)'"
+        continue
+    }
+    throw
+}
+\end{lstlisting}
+\caption{Throttle-afhandeling met cooldown in de export-queue}
+\label{lst:batch-throttle-cooldown}
+\end{listing}
+
+Codefragment~\ref{lst:batch-throttle-cooldown} vangt fouten centraal op in een \texttt{catch}-blok. De variabele \texttt{\$errorMessage} bevat de fouttekst van de exception. Met \texttt{\$isThrottle} controleert het script via een regex-patroon (\texttt{429|Too Many Requests|throttle}) of het om rate limiting gaat. Als dat zo is en het aantal pogingen (\texttt{\$attempt}) nog onder de limiet (\texttt{\$maxAttempts}) zit, start \texttt{Start-QueueThrottleCooldown -Seconds 1800} een wachttijd van 30 minuten. Het sleutelwoord \texttt{continue} zorgt er daarna voor dat dezelfde klant opnieuw geprobeerd wordt in plaats van de volledige run te stoppen. Alleen wanneer de fout geen throttle-geval is, of wanneer alle pogingen opgebruikt zijn, voert \texttt{throw} de fout opnieuw uit zodat die zichtbaar blijft in de rapportering.
+
+Praktisch betekende dit dat lange runs vaker volledig klaar waren tegen de ochtend, ook wanneer de tenant tijdelijk streng throttlede.
+
+\begin{figure}[htbp]
+    \centering
+    \IfFileExists{../graphics/fig-04-throttle-cooldown.png}{%
+        \includegraphics[width=0.8\linewidth]{fig-04-throttle-cooldown.png}%
+    }{%
+        \fbox{\parbox{0.8\linewidth}{\centering Placeholder voor de cooldown- en voortgangsweergave bij HTTP 429.\\ Bestandsnaam: \texttt{fig-04-throttle-cooldown.png}}}%
+    }
+    \caption[Throttle-afhandeling]{Cooldown en voortgang bij HTTP 429 of andere throttling.}
+    \label{fig:throttle-cooldown}
+\end{figure}
+
+\subsection{Configuration-driven architecture}
+\label{subsec:topic-config-driven}
+
+De batchimport valideert vooraf of alle afhankelijkheden en configuratie aanwezig zijn. Hierdoor faalt het script vroeg en duidelijk, in plaats van halverwege de run.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$ImportScript  = Join-Path $PSScriptRoot "Import-ToRDM2.ps1"
+$AnalyzeScript = Join-Path $PSScriptRoot "Analyze-Hydrex-Full.ps1"
+$ConfigPath    = Join-Path $PSScriptRoot "migration-config.json"
+
+if (-not (Test-Path $ImportScript))  { throw "Import-ToRDM2.ps1 niet gevonden." }
+if (-not (Test-Path $AnalyzeScript)) { throw "Analyze-Hydrex-Full.ps1 niet gevonden." }
+if (-not (Test-Path $ConfigPath))    { throw "migration-config.json niet gevonden." }
+
+$script:UserConfig = Get-Content $ConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
+\end{lstlisting}
+\caption{Config-gedreven startup met harde validatie van scripts en JSON-config}
+\label{lst:batch-config-validation}
+\end{listing}
+
+In codefragment~\ref{lst:batch-config-validation} worden eerst drie paden opgebouwd vanuit \texttt{\$PSScriptRoot}: \texttt{\$ImportScript}, \texttt{\$AnalyzeScript} en \texttt{\$ConfigPath}. Dat zijn dus respectievelijk het importscript, het analysescript en het JSON-configbestand die in dezelfde scriptmap verwacht worden. Met \texttt{Test-Path} controleert het script vervolgens of elk bestand effectief bestaat. Faalt één controle, dan stopt de run meteen met \texttt{throw} en een concrete foutmelding. Pas wanneer alle vereisten aanwezig zijn, wordt de inhoud van \texttt{migration-config.json} ingelezen met \texttt{Get-Content -Raw} en omgezet naar een bruikbaar object via \texttt{ConvertFrom-Json}, opgeslagen in \texttt{\$script:UserConfig}.
+
+Dit maakt de pipeline voorspelbaar: de run start alleen wanneer de context correct is. De volledige opstartcontrole is visueel weergegeven in figuur~\ref{fig:config-validation}.
+
+\begin{figure}[p]
+    \centering
+    \IfFileExists{../graphics/fig-05-config-validatie.png}{%
+        \includegraphics[width=\textwidth,height=0.88\textheight,keepaspectratio]{fig-05-config-validatie.png}%
+    }{%
+        \fbox{\parbox{0.95\linewidth}{\centering Placeholder voor een screenshot van de JSON-config en startup-validatie.\\ Bestandsnaam: \texttt{fig-05-config-validatie.png}}}%
+    }
+    \caption[Configuratievalidatie bij opstart]{Validatie van scripts en configuratie vóór de start van de import.}
+    \label{fig:config-validation}
+\end{figure}
+
+\subsection{Two-phase architecture (export + import)}
+\label{subsec:topic-two-phase}
+
+De architectuur is bewust opgesplitst in twee fases. Eerst wordt data per klant geëxporteerd naar bestanden. Daarna wordt die output geïmporteerd in RDM. Deze scheiding maakt troubleshooting eenvoudiger en laat hergebruik van exportbestanden toe.
+
+Belangrijk is dat fase~1 volledig afgerond wordt voordat fase~2 start. Daardoor liggen alle outputbestanden, klantmappen, logs en metadata stabiel op schijf en hoeft de importfase niets meer op te halen uit OneNote of Graph. Praktisch betekent dit dat een fout in de importfase geen nieuwe export vereist: de operator kan fase~2 herstarten op dezelfde bestanden, wat troubleshooting versnelt en het risico op inconsistentie tussen runs verlaagt.
+
+In de praktijk worden beide fases meestal sequentieel uitgevoerd: eerst de volledige bulk-export, daarna de bulk-import op de gegenereerde exportbestanden. Dit verlaagt operationeel risico, maakt tussentijdse kwaliteitscontrole mogelijk en laat herstart van fase 2 toe zonder fase 1 opnieuw uit te voeren.
+
+\begin{figure}[htbp]
+    \centering
+    \IfFileExists{../graphics/fig-06-two-phase-architectuur.png}{%
+        \includegraphics[width=0.9\linewidth]{fig-06-two-phase-architectuur.png}%
+    }{%
+        \fbox{\parbox{0.9\linewidth}{\centering Placeholder voor een schema met twee blokken: Export Queue $\rightarrow$ Import Queue.\\ Bestandsnaam: \texttt{fig-06-two-phase-architectuur.png}}}%
+    }
+    \caption[Twee-fasen migratie via exportbestanden]{Twee-fasen architectuur van de migratie: eerst worden alle OneNote-gegevens per klant geëxporteerd naar bestanden, daarna worden die exportbestanden in een aparte fase geïmporteerd in RDM.}
+    \label{fig:two-phase-architecture}
+\end{figure}
+
+\subsection{HTML reconstruction en moeilijkheden met image magic bytes}
+\label{subsec:topic-html-reconstruction-magic-bytes}
+
+Een belangrijk praktijkprobleem zat in media-bestanden zonder bruikbare extensie of met MIME \texttt{application/octet-stream}. Zonder extra detectie kwamen deze bestanden in output terecht als \texttt{.bin} en werden ze later in RDM als onbekend bestandstype behandeld.
+
+De MIME-informatie (Multipurpose Internet Mail Extensions – een standaard voor bestandstypes) komt uit de Graph API en beschrijft het type van een bestand. In deze migratie werd deze informatie gebruikt als eerste poging om een geschikte extensie toe te kennen. Echter, die informatie is niet altijd betrouwbaar: veel bestanden krijgen het generieke type \texttt{application/octet-stream} (ongespecificeerd binair), of de MIME-hint ontbreekt geheel. Daarom was een fallback naar magic bytes (de binaire signatuur van het bestandsbegin) nodig.
+
+De oplossing bestond uit twee stappen:
+\begin{enumerate}
+    \item eerst proberen een extensie af te leiden uit MIME;
+    \item bij mislukking of bij \texttt{.bin} de eerste bytes lezen (magic bytes) en het bestand hernoemen naar de juiste extensie.
+\end{enumerate}
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+$hintExt = MimeToExt $Resource.MimeHint
+if (-not $hintExt) { $hintExt = ".bin" }
+
+if ($dl.Success -and $target.Ext -eq ".bin") {
+    $dlBytes = [System.IO.File]::ReadAllBytes($target.FullPath)
+    $detectedExt = DetectExtFromMagicBytes $dlBytes
+    if ($detectedExt -and $detectedExt -ne ".bin") {
+        $newFullPath = [System.IO.Path]::ChangeExtension($target.FullPath, $detectedExt)
+        Rename-Item -LiteralPath $target.FullPath -NewName (Split-Path $newFullPath -Leaf)
+    }
+}
+\end{lstlisting}
+\caption{Van onbekend \texttt{.bin}-bestand naar correct type via magic bytes}
+\label{lst:batch-magic-bytes}
+\end{listing}
+
+Codefragment~\ref{lst:batch-magic-bytes} werkt in twee lagen. Eerst probeert \texttt{\$hintExt = MimeToExt \$Resource.MimeHint} een extensie af te leiden uit de MIME-hint. Als die ontbreekt of niet bruikbaar is, krijgt \texttt{\$hintExt} tijdelijk de waarde \texttt{.bin}. Daarna volgt de fallback: alleen als de download geslaagd is (\texttt{\$dl.Success}) en het doelbestand nog \texttt{.bin} is (\texttt{\$target.Ext -eq ".bin"}), leest het script de eerste bytes van het bestand in \texttt{\$dlBytes}. De functie \texttt{DetectExtFromMagicBytes} vergelijkt die bytes met gekende bestandsheaders en geeft een vermoedelijke extensie terug in \texttt{\$detectedExt}. Wanneer die extensie geldig is en niet opnieuw \texttt{.bin}, bouwt \texttt{\$newFullPath} het nieuwe pad op en hernoemt \texttt{Rename-Item} het bestand naar de correcte extensie.
+
+Concreet herkent \texttt{DetectExtFromMagicBytes} onder andere JPEG, PNG, GIF, PDF, ZIP-gebaseerde Office-formaten en OLE-formaten. Dit was cruciaal om afbeeldingen correct op te slaan en opnieuw weer te geven in de doelomgeving.
+
+Figuur~\ref{fig:magic-bytes-before-after} illustreert dit effect met een voor/na-vergelijking van detectie en bestandsherkenning.
+
+\begin{figure}[H]
+    \centering
+    \IfFileExists{../graphics/fig-07-magic-bytes-before-after.png}{%
+        \includegraphics[width=0.96\linewidth]{fig-07-magic-bytes-before-after.png}%
+    }{%
+        \fbox{\parbox{0.96\linewidth}{\centering Placeholder voor before/after-beeld van \texttt{.bin} naar correcte extensie.\\ Bestandsnaam: \texttt{fig-07-magic-bytes-before-after.png}}}%
+    }
+    \caption[Detectie via magic bytes]{Voor en na de detectie van het juiste bestandstype via magic bytes.}
+    \label{fig:magic-bytes-before-after}
+\end{figure}
+
+\subsection{Phased rollout en change management}
+\label{subsec:topic-phased-rollout}
+
+Voor uitrol op veel klanten is gefaseerd werken noodzakelijk. Het exportscript houdt daarom automatisch bij welke klanten al succesvol verwerkt zijn.
+
+De kern van deze opvolglogica staat in codefragment~\ref{lst:batch-phased-rollout}.
+
+\begin{listing}[htbp]
+\begin{lstlisting}
+[string]$CompletedCustomersFile = ".\logs\bulk-export-completed-customers.txt"
+
+$successfulNames = @($ExecutionResult.Results |
+    Where-Object { $_.Status -eq 'Success' } |
+    ForEach-Object { [string]$_.VaultName } |
+    Select-Object -Unique)
+
+$successfulNames | Add-Content -Path $resolvedPath
+\end{lstlisting}
+\caption{Persistente opvolging van succesvol afgewerkte klanten voor gefaseerde uitrol}
+\label{lst:batch-phased-rollout}
+\end{listing}
+
+Dit ondersteunt een veilige rolloutstrategie: kleine batches starten, fouten analyseren, en daarna opschalen naar grotere golven. Succesvol geëxporteerde klanten worden opgeslagen in \texttt{bulk-export-completed-customers.txt}. Bij volgende runs leest het script dit bestand en voegt alleen nieuwe klanten toe, waardoor gefaseerde migratie over meerdere weken mogelijk is.
+
+\subsection{Nazorg: OneNote-pagina's vervangen door RDM-verwijzing}
+\label{subsec:topic-onenote-rdm-notice}
+
+Na export en import blijft er een belangrijk adoptierisico bestaan: gebruikers kunnen de oorspronkelijke OneNote-notitieboeken blijven gebruiken, waardoor informatie opnieuw over twee systemen verspreid raakt. Om die situatie te vermijden werd het script \texttt{Replace-OneNotePages-WithRDMNotice.ps1} toegevoegd als nazorgstap.
+
+Het script overschrijft bestaande OneNote-pagina's met een korte verwijzing naar RDM (standaard: \emph{``Deze informatie zit nu in RDM.''}). Zo wordt voor eindgebruikers ondubbelzinnig duidelijk dat nieuwe of gewijzigde informatie voortaan in RDM moet worden geregistreerd. De uitvoering gebeurt per geselecteerd notitieboek en per pagina, en vereist expliciete gebruikersbevestiging.
+
+Technisch overschrijft de helperfunctie de originele pagina-inhoud en herpubliceert ze met dezelfde titel en de RDM-melding. Deze stap vereist daarom schrijfpermissies op OneNote (\texttt{Notes.ReadWrite} of \texttt{Notes.ReadWrite.All}) en wordt pas na validatie van de migratie toegepast.
+
+\textbf{Deliverable:} Gecontroleerde nazorgprocedure met \texttt{Replace-OneNotePages-WithRDMNotice.ps1}, waarmee gemigreerde OneNote-pagina's na validatie worden vervangen door een duidelijke RDM-verwijzing.
+
+\section{Fase 6: Validatie en aanbevelingen}
+\label{sec:fase6-validatie}
+
+De proof-of-concept werd getest door de volledige migratiepipeline uit te voeren voor een selectie van klantnotitieboeken. Daarbij werd niet alleen gekeken of de scripts technisch werkten, maar ook of het resultaat bruikbaar bleef in de dagelijkse praktijk. De validatie omvatte:
+
+\begin{itemize}
+    \item Controle van de structuurintegriteit: secties en subpagina-hiërarchie correct aanwezig in RDM?
+    \item Controle van mediabestanden: zijn alle afbeeldingen en bijlagen correct opgehaald en zichtbaar in de HTML-inhoud in RDM?
+    \item Operationele opvolging van het migratietempo via onbewaakte runs buiten de werkuren, zodat verwerking kon doorgaan zonder impact op de dagelijkse werking van medewerkers
+\end{itemize}
+
+Op basis van de bevindingen werden enkele aanbevelingen geformuleerd voor verdere uitrol. Daarin kwamen vooral twee punten terug: de toegangsrechten nog gerichter beperken en nagaan of Ollama bruikbaar is voor privacyveilige AI-categorisatie. Dat zijn geen bijkomstige details, maar concrete verbeterpunten voor een volgende versie van de oplossing.
+
+De validatiefase toonde aan dat de migratie niet alleen technisch moest werken, maar ook bruikbaar moest blijven voor de eindgebruiker. Het volstond dus niet dat bestanden werden overgezet; de resulterende structuur moest ook logisch blijven en makkelijk onderhoudbaar zijn. Vooral de combinatie van hiërarchie en mediabestanden bleek daarbij belangrijk. Als die twee elementen niet goed samenvallen, voelt RDM voor de gebruiker al snel aan als een losse opslagplaats in plaats van als een echte vervanging.
+
+Verder werd duidelijk dat de grootste beperkingen niet in de basislogica lagen, maar in praktische randvoorwaarden zoals toegangsbeheer en verwerkingstijd. Voor een latere uitrol zijn dus vooral verbeteringen nodig op het vlak van rechtenbeheer, batchplanning en de afhandeling van uitzonderingen. Dat betekent bijvoorbeeld dat toegang nog gerichter moet worden toegekend, terwijl de planning van export- en importgolven in de praktijk al goed afgestemd is en de voornaamste beperking vooral ligt bij de exportverwerkingstijd door throttling van Microsoft Graph. De proof-of-concept vormt daarmee een werkbare basis, maar toont ook waar de grenzen van de huidige aanpak liggen.
+
+Ten slotte blijft een beperkte manuele controle nuttig, zeker bij de eerste batches. Zelfs met deduplicatie, magic-byte-detectie en gefaseerde uitrol is het verstandig om nog na te gaan of de resultaten overeenstemmen met de verwachting. Die controle hoeft niet zwaar te zijn, maar helpt wel om fouten vroeg te zien en bij te sturen waar nodig. Zo blijft automatisering een hulpmiddel voor kwaliteit, en geen vervanging van kritische opvolging.
 

@@ -1,8 +1,8 @@
-{
+﻿{
   "latex-workshop.latex.outDir": "../output",
   "latex-workshop.latex.recipes": [
         {
-            "name": "xelatex ➞ biber ➞ xelatex× 2",
+            "name": "xelatex ➞ biber ➞ xelatex× 2",
             "tools": [
                 "xelatex",
                 "biber",
@@ -11,7 +11,7 @@
             ]
         },
         {
-            "name": "xelatex× 2",
+            "name": "xelatex× 2",
             "tools": [
                 "xelatex",
                 "xelatex"
@@ -26,39 +26,22 @@
     ],
     "latex-workshop.latex.tools": [
         {
-            "args": [
-                "-f",
-                "-xelatex",
-                "-shell-escape",
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-file-line-error",
-                "-outdir=%OUTDIR%",
-                "%DOC%"
-            ],
+            "args": ["-f", "-xelatex", "-shell-escape", "-synctex=1", "-interaction=nonstopmode", "-file-line-error", "-outdir=%OUTDIR%", "%DOC%"],
             "command": "latexmk",
-            "env": {},
+            "env": { "TEXMF_OUTPUT_DIRECTORY": "%OUTDIR%" },
             "name": "latexmk"
         },
         {
-            "args": [
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-shell-escape",
-                "-output-directory=%OUTDIR%",
-                "-file-line-error",
-                "%DOC%"
-            ],
+            "args": ["-synctex=1", "-interaction=nonstopmode", "-shell-escape", "-output-directory=%OUTDIR%", "-file-line-error", "%DOC%"],
             "command": "xelatex",
-            "env": {},
+            "env": {
+                "TEXMF_OUTPUT_DIRECTORY": "%OUTDIR%",
+                "PATH": "C:\Users\Wim.Meirlaen\AppData\Local\Programs\Python\Python312;C:\Users\Wim.Meirlaen\AppData\Local\Programs\Python\Python312\Scripts;C:\Users\Wim.Meirlaen\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
+            },
             "name": "xelatex"
         },
         {
-            "args": [
-                "--input-directory=%OUTDIR%",
-                "--output-directory=%OUTDIR%",
-                "%DOCFILE%"
-            ],
+            "args": ["--input-directory=%OUTDIR%", "--output-directory=%OUTDIR%", "%DOCFILE%"],
             "command": "biber",
             "env": {},
             "name": "biber"
@@ -67,43 +50,16 @@
     "latex-workshop.view.pdf.viewer": "tab",
     "latex-workshop.latex.autoBuild.run": "onSave",
     "latex-workshop.latex.recipe.default": "first",
-    "latex-workshop.latex.autoClean.run": "onBuilt",
+    "latex-workshop.latex.autoClean.run": "never",
     "latex-workshop.latex.clean.method": "glob",
     "latex-workshop.latex.clean.fileTypes": [
-        "**/*.acn",
-        "**/*.acr",
-        "**/*.alg",
-        "**/*.aux",
-        "**/*.bbl",
-        "**/*.bcf",
-        "**/*.bib.bak",
-        "**/*.blg",
-        "**/*.dvi",
-        "**/*.fdb_latexmk",
-        "**/*.fls",
-        "**/*.glg",
-        "**/*.glo",
-        "**/*.gls",
-        "**/*.glsdefs",
-        "**/*.idx",
-        "**/*.ind",
-        "**/*.ist",
-        "**/*.lof",
-        "**/*.lol",
-        "**/*.lop",
-        "**/*.lot",
-        "**/*.nav",
-        "**/*.out",
-        "**/*.run.xml",
-        "**/*.snm",
-        "**/*.synctex",
-        "**/*.synctex(busy)",
-        "**/*.synctex.gz",
-        "**/*.synctex.gz(busy)",
-        "**/*.tdo",
-        "**/*.toc",
-        "**/*.xdv",
-        "**/_minted-*/"
+        "**/*.acn", "**/*.acr", "**/*.alg", "**/*.aux", "**/*.bbl", "**/*.bcf",
+        "**/*.bib.bak", "**/*.blg", "**/*.dvi", "**/*.fdb_latexmk", "**/*.fls",
+        "**/*.glg", "**/*.glo", "**/*.gls", "**/*.glsdefs", "**/*.idx", "**/*.ind",
+        "**/*.ist", "**/*.lof", "**/*.lol", "**/*.lop", "**/*.lot", "**/*.nav",
+        "**/*.out", "**/*.run.xml", "**/*.snm", "**/*.synctex", "**/*.synctex(busy)",
+        "**/*.synctex.gz", "**/*.synctex.gz(busy)", "**/*.tdo", "**/*.toc",
+        "**/*.xdv", "**/_minted-*/"
     ],
     "latex-workshop.bibtex-format.sort.enabled": true,
     "latex-workshop.intellisense.citation.backend": "biblatex",
@@ -112,11 +68,7 @@
     "latex-workshop.latex.autoBuild.interval": 30000,
     "latex-workshop.latex.clean.subfolder.enabled": true,
     "latex-workshop.latex.magic.args": [
-        "-synctex=1",
-        "-interaction=nonstopmode",
-        "-outputdir=%OUTDIR%",
-        "-file-line-error",
-        "--shell-escape",
-        "%DOC%"
-    ],
+        "-synctex=1", "-interaction=nonstopmode", "-outputdir=%OUTDIR%",
+        "-file-line-error", "--shell-escape", "%DOC%"
+    ]
 }

@@ -1,0 +1,102 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram name="Page-1" id="VJIrHofbaVkhInFctMeo">
+    <mxGraphModel dx="1722" dy="1001" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-5" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="C1P3r-CWIAoQteXPSEUE-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-1" parent="1" style="swimlane;whiteSpace=wrap;html=1;" value="Get-AllProjectSites-complete.ps1" vertex="1">
+          <mxGeometry height="200" width="200" x="40" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-9" edge="1" parent="C1P3r-CWIAoQteXPSEUE-1" source="C1P3r-CWIAoQteXPSEUE-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="240" y="105.14285714285711" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-2" parent="C1P3r-CWIAoQteXPSEUE-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="- scant alle Sharepoint-sites op zoek naar klantensites-patronen (vb. A-*, P-*, SharedWithCustomer, MWDocumentation).&lt;br&gt;&lt;br&gt;&lt;div&gt;- exporteert de resultatenlijst naar Sharepoint-projecten-VOLLEDIG.csv&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- wordt uitgevoerd door Sharepoint-administrator&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="200" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-11" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="C1P3r-CWIAoQteXPSEUE-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="260" y="475" />
+              <mxPoint x="260" y="338" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-16" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="491" />
+              <mxPoint x="480" y="330" />
+            </Array>
+            <mxPoint x="500" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-25" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="C1P3r-CWIAoQteXPSEUE-24">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="178" y="530" />
+              <mxPoint x="970" y="530" />
+              <mxPoint x="970" y="335" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-3" parent="1" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Sharepoint-projecten-VOLLEDIG.csv" vertex="1">
+          <mxGeometry height="70" width="150" x="65" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-6" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=40;" value="Admin-Grant-SharedSites-From-CSV.ps1" vertex="1">
+          <mxGeometry height="200" width="190" x="280" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-10" parent="C1P3r-CWIAoQteXPSEUE-6" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div&gt;- verleent in bulk toegang tot alle vereiste sharepointsites voor de gebruikers van het export-script&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;- wordt uitgevoerd door Sharepoint-administrator" vertex="1">
+          <mxGeometry height="110" width="190" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-19" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="C1P3r-CWIAoQteXPSEUE-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-21" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="309.8333333333335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-12" parent="1" style="swimlane;whiteSpace=wrap;html=1;" value="bulk-export-onenote-queue.ps1" vertex="1">
+          <mxGeometry height="200" width="220" x="500" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-13" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="C1P3r-CWIAoQteXPSEUE-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="- exporteert op basis van vault matching de sites naar lokale bestanden (html + bijlagen)&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- draait op de server&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- enkel uit te voeren door export-gebruikers die de nodige rechten gekregen hebben&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="180" x="520" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-20" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" target="C1P3r-CWIAoQteXPSEUE-18">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="470" />
+              <mxPoint x="740" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-15" parent="1" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="lokale export-bestanden" vertex="1">
+          <mxGeometry height="60" width="120" x="550" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-17" parent="1" style="swimlane;whiteSpace=wrap;html=1;" value="bulk-import-client-toRDM2.ps1" vertex="1">
+          <mxGeometry height="200" width="200" x="760" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-18" parent="C1P3r-CWIAoQteXPSEUE-17" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="- haalt de lokale export op en migreert dit naar RDM&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- draait op de server&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- geen specifieke rechten vereist&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="200" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-23" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=40;" value="replace-OneNotePages-withRDMnotice.ps1" vertex="1">
+          <mxGeometry height="205" width="200" x="990" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-24" parent="C1P3r-CWIAoQteXPSEUE-23" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="- maakt de sharepointsites van geëxporteerde klanten leeg&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- schrijft een melding &quot;Deze informatie zit nu in RDM&quot;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- draait op de server&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- enkel uit te voeren door export-gebruikers die de nodige rechten gekregen hebben&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="200" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="C1P3r-CWIAoQteXPSEUE-28" edge="1" parent="1" source="C1P3r-CWIAoQteXPSEUE-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.01;entryY=0.279;entryDx=0;entryDy=0;entryPerimeter=0;" target="C1P3r-CWIAoQteXPSEUE-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

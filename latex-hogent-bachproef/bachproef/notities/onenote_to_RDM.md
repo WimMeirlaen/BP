@@ -28,7 +28,7 @@ Bovendien kwamen reeds heel wat vraagstukken kijken bij de mogelijke aanpakken
 
 Aanvullende bedenkingen die moeten worden gemaakt:
 - Azure OpenAI en Claude AI kunnen de informatie die wordt ingelezen uit OneNote analyseren. Echter: deze informatie komt dan ook bij de AI-provider terecht.
-  Aangezien hier vertrouwelijke informatie in staat is dit een schending van de privacy van de klant, deze piste is dus uitgesloten
+  Aangezien hier vertrouwelijke informatie in staat is dit een schending van de privacy van de klant. Echter 
   -- Mogelijke pistes:
     --- gebruik van Ollama: deze analyse gebeurt volledig offline wat zorgt dat er geen privacy-issues zijn.
         Er werd een script klaargezet dat Ollama installeert en het vereiste pakket (3.2) gaat downloaden. Ollama is echter zeer resource-intensief, er zal dus moeten afgewacht worden of het script met Ollama niet teveel tijd zal vragen met de beschikbare resources. 

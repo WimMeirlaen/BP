@@ -1,0 +1,786 @@
+Chapter 15
+
+Software as a Service
+
+portals are mostly only providing authentication and access, but we believe there’s
+an opportunity for identity providers to extend the breadth and power of their policy
+models beyond authentication, and to begin to include authorization.
+For example, SaaS applications could start to broadly support account or role
+provisioning as part of a Just-in-Time (JIT) access initiative, using a standard such as
+SCIM.2 SCIM is only a first step, however, and it’ll be interesting to see whether and how
+a standard (whether formal or informal) arises around how to represent authorization.3
+We don’t believe that applications will ever fully externalize their authorization,
+which in fact is one of the reasons that XACML has not achieved widespread industry
+adoption. However, we do believe that we’ll see a commonly accepted way of defining
+and communicating authenticated (and therefore trusted) identity context to SaaS
+applications, which they can consume and use in ways that are appropriate for their
+environment. JIT access provisioning is in fact one narrow example of this.
+Without a doubt, this will be an interesting and dynamic space to watch, as we see
+how Zero Trust-aware SaaS applications can be, and what type of security, operational,
+and business value this will bring. Over time, we believe that these capabilities will
+also “trickle down” to non-SaaS applications, but given their sophisticated federation
+capabilities and investment in their platforms, we anticipate that SaaS providers will lead
+the way.
+
+ CIM is the System for Cross-domain Identity Management. See https://tools.ietf.org/
+S
+html/rfc7642.
+3
+Or, for example, if Zero Trust, identity, and SaaS systems begin using existing standards such as
+XACML, the eXtensible Access Control Modeling Language.
+2
+
+191
+
+CHAPTER 16
+
+IoT Devices and “Things”
+Throughout this book, much of our focus has been on controlling access by
+authenticated entities—namely, users and servers. What they both have in common are
+that they’re authenticated against an identity system, have attributes or roles for context,
+and are using modern devices with full-featured operating systems that support the
+installation of third-party software. This makes these systems well suited for integration
+into the type of Zero Trust architectures that we’ve been discussing. Of course, these are
+not the only types of devices—there are billions of connected devices of entirely different
+types, running on lower-capability and less extensible hardware and software platforms,
+often referred to as Internet of Things (IoT) devices. These devices often coexist on the
+same enterprise networks as organizations’ most valuable resources. They are also well-­
+known for exhibiting security vulnerabilities and representing an inviting attack surface,
+and should be included in any Zero Trust security architecture.
+These IoT devices span a wide variety of functions, footprints, and capabilities,
+and we’re deliberately including a broad set in our discussion here. We consider this
+category of IoT Devices and “things” to include newer connected devices as well as more
+traditional devices which exist on enterprise networks. For example
+•
+
+Printers
+
+•
+
+VOIP phones
+
+•
+
+IP cameras
+
+•
+
+Badge readers
+
+•
+
+“Smart” things, such as blackboards, light bulbs, etc.
+
+•
+
+Medical or diagnostic devices on healthcare networks
+
+•
+
+HVAC systems
+
+© Jason Garbis and Jerry W. Chapman 2021
+J. Garbis and J. W. Chapman, Zero Trust Security, https://doi.org/10.1007/978-1-4842-6702-8_16
+
+193
+
+Chapter 16
+
+IoT Devices and “Things”
+
+We also want to consider other types of devices that may be running in widely
+distributed locations, and located on public or cellular networks, such as
+•
+
+Environmental sensors
+
+•
+
+Remote security cameras
+
+•
+
+Machinery or vehicle sensors or actuators
+
+And finally, there are operational technology (OT) systems focused on industrial
+automation and management, which over the past 10–15 years have shifted to using
+standardized and interoperable TCP/IP networking, and are more frequently being
+connected to enterprise IT networks. Zero Trust architectures can be applied to OT
+environments, although they have some differences and challenges compared to IT
+environments. However, our focus in this chapter is on IT and enterprise networks.
+What all these “things” have in common is that they have an IP address, and need
+to initiate or receive communications over the network. We’re also considering these
+devices to be relatively closed systems, meaning that enterprises cannot install arbitrary
+third-party software onto them. This is not true for all IoT devices, of course—there are
+a growing set of such devices based on full-features OSs, typically a variant of Linux,
+onto which you can install third-party software. Depending on your environment
+and architecture, you could treat these as Zero Trust subjects (i.e., computing devices
+with identities), in which case our standard approach of access control and policy
+enforcement applies. Or, you can treat them as IoT devices, in which case, the principles
+and approaches we’re discussing in this chapter will apply.
+In any case, these devices are frequently designed, manufactured, and deployed
+without the same degree of concern for security that we expect from enterprise IT
+products. There are hundreds of examples of flaws in consumer-grade connected
+products, and these also exist in products targeting the enterprise, especially for
+specialized vertical products such as medical devices. Common security vulnerabilities
+in these devices include the use of unencrypted network protocols, hardcoded default
+passwords, unremovable backdoors, network and OS vulnerabilities, difficulty or
+impossibility of upgrading firmware, and, for physically accessible devices, the ability for
+an attacker to use that proximity to gain shell access on the device.
+These devices are definitely a ripe vector for attack and data exfiltration, and have
+served as footholds for malware to perform network reconnaissance and move laterally
+(not to mention being a favorite weak point for red teams to exploit during pen testing
+exercises).
+194
+
+Chapter 16
+
+IoT Devices and “Things”
+
+Note that some IoT devices are deployed as part of a larger, typically cloud-based
+modern system—the major cloud service providers each have their own platforms,
+which utilize both device-installed and cloud-based software that work in conjunction
+to provide messaging, security, and data management, among other services. These
+platforms, such as Azure IoT, Google Cloud IoT Core, and AWS Greengrass, each have a
+well-designed security and communications model, which in some ways will be self-­
+contained with built-in support for secure bidirectional communications (often both
+synchronous and asynchronous). As such, it may be perfectly acceptable to deploy and
+operate them separately from your overall enterprise Zero Trust model. This is okay—as
+we’ve mentioned throughout the book, not everything needs to be included within the
+scope of your Zero Trust project. In fact, deliberately excluding certain components of
+your IT infrastructure will help with your focus, velocity, and success. However, even if
+you are using a modern IoT platform, it’s important to understand its networking and
+communications architecture, so that you can ensure it coexists with the rest of your
+network security model.
+Of course, most IoT devices sit outside of these cloud-based frameworks, and
+absolutely should be considered for inclusion in your Zero Trust security architecture.
+In the remainder of this chapter, we’ll first examine some of the security and networking
+challenges associated with IoT devices, and then look at how Zero Trust systems can be
+applied to address these problems.
+
+IoT Device Networking and Security Challenges
+Unlike user devices or servers, IoT devices often pose some complex management,
+security, and access challenges when deployed onto enterprise networks, due to their
+closed nature and often-constrained communications architectures. Figure 16-1 depicts
+a simplified view of an enterprise network, to illustrate these points. The network is
+made up of both wired and wireless segments, with a wide variety of device types
+connected. The wired network in the enterprise has a mixture of user devices and
+Ethernet-connected things including VOIP phones, IP cameras, printers, and access
+door badge readers. The wireless network is used by some user devices, printers, and
+other connected office equipment such as wireless conference room monitors and
+digital whiteboards.
+
+195
+
+Chapter 16
+
+IoT Devices and “Things”
+
+Tablet
+
+IoT Device
+Admin
+
+Desktop
+
+Private
+Servers
+Servers
+Servers
+
+Laptop
+
+VOIP Phone
+Public
+Servers
+Servers
+Servers
+
+IP Camera
+Internet
+
+Badge
+Reader
+Printer
+TV /
+Monitor
+
+Access
+Point
+
+Whiteboard
+Figure 16-1. Enterprise IoT Network
+Some of the devices on this network communicate upward to private servers,
+running on another segment within the enterprise network, while others connect to
+servers across the Internet. There are also a number of system administrators who
+periodically need to remotely connect down to these devices, to perform firmware
+updates or apply configuration changes. These admins may be employees of the
+enterprise, or may work for a device vendor.
+196
+
+Chapter 16
+
+IoT Devices and “Things”
+
+The systems shown in this diagram typically exhibit a number of common security
+weaknesses, which we touched on in the introduction. First, many of these devices
+use unencrypted network protocols, making them subject to traffic inspection or
+Man-In-The-Middle (MITM) attacks that can compromise confidentiality, integrity,
+and availability. Second, many of these devices have open listening ports. While this
+is necessary to permit our remote sysadmin to access them, it also allows any other
+network-connected device to establish a TCP connection to them. Third, these devices
+often have weak (or hard-coded) authentication mechanisms, and also typically have
+network stacks that are vulnerable to a variety of attacks. Finally, some of these devices,
+such as outdoor environmental sensors, remote cameras, or control equipment, may
+be physically accessible to attackers for long periods of time. As a result, attackers may
+be able to hijack a wired network connection, or gain access to the device by physically
+compromising it (e.g., by power-cycling it with a malicious USB stick inserted).
+Looking at these devices through our Zero Trust security lens, it should be clear
+that these systems fall short of meeting our core principles in many ways. Ideally, a Zero
+Trust system would provide security for these devices in a way that enforces
+•
+
+Principle of least privilege: Minimize the upstream access that these
+devices have, in case of device or network compromise.
+
+•
+
+Device isolation: Prevent unauthorized subjects on the network from
+connecting to the devices.
+
+•
+
+Traffic encryption: Route native device traffic through a secure and
+encrypted tunnel.
+
+Of course, some of these devices (such as wall-mounted badge readers) may be in
+an isolated hard-wired network, and others may be assigned to distinct private VLANs in
+order to isolate their traffic. Those are good practices, but don’t (and can’t) apply to all
+devices, and even when deployed do not make the devices impervious to attacks.
+Real-world networks are too often messy, opaque, and heterogeneous, and have
+often grown organically without a coherent plan. This is typically due to pressure on
+technical staff to get things working as quickly as possible, and not allocating sufficient
+time or budget to rework or improve things later. As a result, mixed enterprise networks
+with these types of devices can exhibit a number of challenges that make them difficult
+to secure. First, these networks tend to be, in practice, flat and open, with hundreds
+(or thousands) of diverse sets of devices. This is often due to the difficulty of managing
+
+197
+
+Chapter 16
+
+IoT Devices and “Things”
+
+traditional (non-Zero Trust) ACLs across a distributed enterprise, and keeping them up
+to date and in sync with daily changes. Second, unlike user devices which are typically
+centrally managed, these IoT devices are typically either managed as standalone devices
+or via a management software system that applies only to devices of a given type. As
+such, it’s often difficult and labor-intensive to configure or manage these devices at scale.
+But the biggest challenge with these devices, given the inability to install software onto
+them, is controlling their network traffic. Specifically, what upstream resources are they
+allowed to connect to, and what other systems on the network are allowed to connect to
+them. In a Zero Trust system, this is the role of the PEP, of course—either a network PEP,
+a user agent PEP, or both. Next, we’ll look at how we can bring these worlds together, and
+some of the technical challenges that often arise.
+
+Zero Trust and IoT Devices
+Ideally, IoT devices would be deployed onto an isolated and uniform network, with
+all north/south network access into the isolated network controlled by a Zero Trust
+PEP. This idealized logical state is depicted in Figure 16-2.
+
+198
+
+Chapter 16
+
+IoT Devices and “Things”
+
+VOIP Phone 1
+VOIP Phone 2
+
+PEP
+VOIP Phone N
+
+Implicit trust zone
+PEP
+IP Camera 1
+
+PEP
+
+Servers
+Servers
+Servers
+
+IP Camera 2
+
+IP Camera N
+
+Implicit trust zone
+
+Figure 16-2. Idealized Zero Trust IoT Network Model
+The benefits of this should be clear, as this model achieves each of the three goals
+listed previously. First, the principle of least privilege is enforced—all upstream network
+traffic from each set of devices is controlled by the PEP, meaning that Zero Trust
+policies are applied and enforced on outbound traffic. This blocks attempts to use a
+compromised device for data exfiltration, reconnaissance, or DDoS attacks. Second,
+these devices are isolated within their own uniform implicit trust zone, so that inbound
+traffic must transit the PEP, which enforces access control policies in front of the devices’
+
+199
+
+Chapter 16
+
+IoT Devices and “Things”
+
+open listening ports. And finally, all traffic is encrypted between the PEPs, overcoming
+any native cleartext protocols used by the devices. This eliminates much of the risk of
+MITM attacks.
+Of course, even this idealized model is imperfect, which is a byproduct of the nature
+of these devices. For example, devices within each implicit trust zone can communicate
+with one another directly over the LAN, so if one IP camera gets compromised, that
+malware may be able to move laterally between peer cameras, although it will be
+constrained to this isolated zone, with outbound traffic constrained by the PEP. Another
+example—often device identification is based on weak authentication mechanisms,
+so an attacker could masquerade as an IP Camera, and obtain the same network
+permissions as its peer cameras. There are ways to compensate for these weaknesses,
+which we’ll touch on later.
+Of course, the idealized view shown in Figure 16-2 is a logical view, and real-world
+networks have a variety of technical means they can use to identify and authenticate
+devices, assign networks and IP addresses, and route traffic. These are the key functions
+that every network and security infrastructure must provide, and they can be combined
+in complex ways. Ultimately, a Zero Trust system securing IoT devices must be able to
+•
+
+Capture, route, and encrypt traffic to and from these devices
+
+•
+
+Centrally manage access policies
+
+•
+
+Enforce access controls across a distributed set of devices
+
+This is difficult to achieve in a robust fashion on flat, mixed networks like the one
+depicted in Figure 16-1. Tables 16-1 through 16-3 show approaches to these functions,
+along with the pros and cons of each.
+
+200
+
+Chapter 16
+
+IoT Devices and “Things”
+
+Table 16-1. How Devices Are Assigned to Networks
+Pros
+
+Cons
+
+Physical Cable/
+Switch Port
+
+May be a physically isolated
+network.
+
+Difficult to change.
+Isolation may be limited by switch port capacity.
+Difficult to isolate peer network devices.
+
+Private VLAN
+
+Logical separation within one
+physical network.
+
+Access granted based on physical network or
+switch port access.
+
+Wireless Access Usually simpler to reconfigure
+Point
+networks.
+Built-in device isolation in
+many Wi-Fi systems.
+
+Not all devices are Wi-Fi enabled
+Simple password authentication is not strong,
+and not all devices support WPA-Enterprise.
+
+NAC/802.1x
+
+Dynamic VLAN assignment can Often requires expensive hardware.
+isolate devices by type.
+Difficult to manage large numbers of VLANs.
+Not all devices support 802.1x.
+
+Table 16-2. How Devices Are Identified/Authenticated
+Pros
+
+Cons
+
+IP address
+
+Fixed IPs can uniquely identify a device. Configuration and management
+overhead.
+Weak form of identification, easy to spoof.
+
+MAC Address
+
+Supported on all devices.
+Useful for identifying classes of devices
+on mixed networks, and assigning to
+zones (often with 802.1x).
+
+DHCP
+Fingerprint
+
+Supported on almost all devices.
+Weak form of identification, easy to spoof.
+Reasonably useful for identifying classes
+of devices on mixed network.
+
+Certificate via Strong and reliable.
+802.1x
+
+Weak form of identification, easy to spoof.
+
+Management and PKI overhead.
+Many devices cannot use cert-based
+authentication or identification.
+
+201
+
+Chapter 16
+
+IoT Devices and “Things”
+
+Table 16-3. How Network Routing Is Assigned
+
+Default Network
+Gateway
+
+Pros
+
+Cons
+
+Assigned automatically via DHCP.
+Fixed and centralized egress
+point from LAN is natural policy
+enforcement point.
+
+DHCP assignment can’t always
+distinguish device types on mixed
+networks.
+Configuration separate from DHCP
+is possible but may be onerous.
+
+Route setting for
+Simple to set up and independent of
+protected resources by device configuration.
+network router
+
+Secures access to destination
+resources, but may not filter by
+source.
+Does not prevent device access to
+other resources.
+
+Manually configure
+devices
+
+Labor-intensive and difficult to
+maintain as networks change.
+
+Fine-grained control of routes.
+
+The simplest and easiest approach is depicted in Figure 16-3, showing a set of
+IP cameras deployed onto an isolated and homogeneous network. This could be a
+physically isolated, wired network, a VLAN assigned by a NAC, or even a camera-only
+wireless network with an isolated SSID. What’s important (and what makes it simple)
+is that it’s homogeneous—all devices on that network are the same type, and therefore
+have the same set of network access controls applied to them.
+
+202
+
+Chapter 16
+
+IP Camera 1
+
+IoT Devices and “Things”
+
+PEP as default
+local network gateway
+
+IP Camera 2
+
+PEP
+
+IP Camera N
+
+PEP
+
+IP Camera Server
+
+IP Camera
+Management System
+
+Figure 16-3. IP Cameras on Isolated, Homogeneous Network
+The key for this scenario is that the IP cameras on the network have the PEP
+configured as their default network gateway, so that all non-LAN traffic is sent to the
+PEP, which performs routing and policy enforcement. That is, the PEP is the only egress
+point from the local zone. The cameras’ default network gateway assignment could be
+performed centrally via the IP camera management system, or via a DHCP server for the
+camera-only segment.
+In any case, it should be clear that is as close to the ideal scenario as possible, making
+it simple to integrate into a Zero Trust model. Our next scenario, depicted in Figure 16-4,
+is more typical, and more difficult to control.
+
+203
+
+Chapter 16
+
+IoT Devices and “Things”
+
+Network 192.168.112.0/20
+192.168.112.57
+
+192.168.112.28
+
+Desktop
+
+Laptop
+
+192.168.112.35
+
+Test
+Equipment 1
+
+192.168.112.11
+
+Test
+Equipment 2
+
+Router
+
+192.168.112.54
+PEP
+
+PEP
+
+192.168.112.58
+
+Test
+Equipment N
+
+Test
+Equip.
+Server
+
+10.6.20.2
+
+Figure 16-4. Heterogeneous Enterprise Network
+This diagram shows a mixed (heterogeneous) network segment, 192.168.112.0/20,
+consisting of hundreds of computers and devices throughout a flat enterprise network
+in one office building. The devices on this network have essentially random IP addresses
+assigned to them from the subnet range, via DHCP, and the organization doesn’t have
+an accurate CMDB. This scenario presents a number of challenges to achieving our
+goals—which are to ensure that only the Test Equipment devices are permitted to access
+the Test Equipment server, that no other devices can access that server, and that access
+to the Test Equipment devices is controlled by policy. Unfortunately, in this real-world
+scenario, we cannot meet all these goals without making changes to the network. This is
+to be expected in many enterprise scenarios, even outside of IoT devices—but at the very
+least, you need to be aware of your network’s shortcomings and determine how to solve
+these problems, even if you cannot solve them immediately.
+
+204
+
+Chapter 16
+
+IoT Devices and “Things”
+
+Let’s examine what can (and cannot) be achieved here, focusing on securing
+upstream network access from the Test Equipment. That is, the enterprise needs a way
+to ensure that Test Equipment-initiated traffic destined for the Test Equipment server
+(10.6.20.2) on the remote network gets routed to the local PEP for enforcement and
+forwarding via the secure tunnel. This can be achieved in three possible ways:
+•
+
+Default gateway configured directly on Test Equipment
+
+•
+
+Default gateway assigned to the Test Equipment via DHCP
+
+•
+
+Static or dynamic routing on the network
+
+Configuring the default network gateway directly on the Test Equipment may be
+possible, depending on whether it technically supports this. It also depends on how
+labor-intensive a process this is. Performing this through a centralized management
+system is straightforward while requiring individual manual changes across
+hundreds of devices may be a non-starter. Assigning the PEP as the default network
+gateway via DHCP, for all devices, may also be a viable approach in some cases.
+In some cases, the DHCP server may be able to assign different default network
+gateways for different devices, if the DHCP assignment can accurately distinguish
+between DHCP requests initiated by the Test Equipment, vs. those issued by other
+devices,1 and return different values.
+Finally, it’s also possible to configure the network router to send network
+traffic bound for the remote Test Equipment Server (10.6.20.2) to the local PEP
+(192.168.112.54). This has the advantage of not requiring any other changes to the
+network, but then requires that the PEP have some ability to distinguish legitimate traffic
+(initiated by a Test Equipment device) from illegitimate traffic (e.g., initiated by malware
+on a user’s device performing network reconnaissance). This will be difficult to achieve
+in our scenario, since IP addresses are randomly assigned, and there is no CMDB. It’s
+possible for the PEP to use MAC addresses to distinguish devices, but these are a weak
+form of identification that can be trivially spoofed, and therefore carries some risk if it’s
+used in this fashion.
+
+For example, by examining DHCP fingerprints.
+
+1
+
+205
+
+Chapter 16
+
+IoT Devices and “Things”
+
+Summary
+Like many areas of our real-world networks and systems, IoT devices are often complex
+and difficult to manage. Zero Trust can help, in many (if not most) situations, but
+typically cannot provide as robust a level of security as it can with standard enterprise
+devices (user systems and servers). Zero Trust PEPs can be used to control upstream
+device access to protected resources, to ensure that network traffic is encrypted, and to
+control downstream access to IoT devices—with varying degrees of effectiveness, based
+on the many factors we’ve discussed in this chapter.
+As you look at your enterprise to identify candidate IoT systems for inclusion in
+your Zero Trust project, there are a few characteristics that you can look for to help you
+identify well-suited IoT systems. First, understand how these devices’ networking is
+configured, and prefer IoT devices that have a centrally managed mechanism to control
+these easily at scale. Second, look for areas of your network that are well understood
+and reasonably well documented. Avoid trying to secure IoT devices on an unmanaged,
+diverse, and opaque network as an early project—you need to make sure you have some
+experience and success applying your Zero Trust architecture to IoT systems in simpler
+and more well-understood environments. And finally, look for some “low hanging fruit”
+around securing remote third-party user access to internal devices. Zero Trust’s ability to
+require a business process, such as the creation of a service desk ticket, prior to access,
+can deliver real security value, quickly.
+IoT devices are definitely a nascent area for Zero Trust and, as we’ve explored here,
+tend to be complex and highly technical and can often be a minefield of older and
+inflexible technology. But there’s a lot of opportunity for improvement, and we’ve only
+scratched the surface on this topic—this could be an entire book in its own right. If this is
+a primary use case for your Zero Trust project, explore carefully and be sure to perform
+a pilot project in your intended environment to validate the technology’s compatibility.
+Some important questions to ask yourself include
+
+206
+
+•
+
+How complex and mature are your device networks?
+
+•
+
+Do you have an accurate and reliable inventory of the devices and
+their communications patterns?
+
+•
+
+How easy or hard is it to capture device network traffic for
+enforcement by a PEP?
+
+Chapter 16
+
+IoT Devices and “Things”
+
+•
+
+What network changes will be required, and what impact will they
+have on other networked devices?
+
+•
+
+What network protocols do these devices use? Are they connection-­
+oriented or connectionless protocols? Are they encrypted?
+
+Finally, of course, different Zero Trust implementations will approach this
+differently, and it’s important to clearly understand the capabilities of your chosen Zero
+Trust solution and deployment model for this use case. Some products and architectures
+will support these scenarios well, while others will struggle. Having said that, we think
+Zero Trust systems can bring a great deal of value to often-insecure IoT ecosystems,
+and we encourage you to investigate whether your organization’s environment is a good
+candidate.
+
+207
+
+PART III
+
+Putting It All Together
+In Part II of this book, we took the Zero Trust principles and architectures from Part I,
+and used them as our lens to examine a broad set of components across enterprise
+IT and security architectures. Ranging from on-premises and cloud-based network
+infrastructure to security and non-security components, this analysis hopefully provided
+you with a deep understanding of the ways in which Zero Trust can impact your
+enterprise. This should have armed you with a set of tools, patterns, and perspectives
+with which you can begin to construct your enterprise’s journey to Zero Trust.
+Here in Part III, we’ll be concluding our journey by building on these foundations.
+We’ll begin with what is in many ways the keystone of Zero Trust—the policy model,
+in Chapter 17. Recall our architectural premise is that a Zero Trust system is made up
+of a set of distributed policy enforcement points, and a centralized policy decision
+point. From this perspective, the policies that get defined, evaluated, and ultimately
+enforced are arguably the most important part of the system. What this means is that the
+policy model in your chosen Zero Trust implementation—its language and structure,
+which will be reflected in that product’s deployment models and policy enforcement
+capabilities—will have a large impact.
+After we discuss the policy model, we’ll bring things back to more concrete reality
+in Chapter 18, by looking at seven of the most common Zero Trust use cases, and how
+your organization should approach them. We’ll examine each one from an architectural
+perspective, discussing considerations and recommendations.
+Finally, in Chapter 19, we’ll wrap up our journey (and help you begin yours) with
+discussion and guidance on how you can plan for successful Zero Trust deployments,
+projects, and initiatives. We’ll look at this both from a top-down organizational and
+program perspective and from a bottom-up tactical project point of view. We’ll also look
+at common roadblocks to Zero Trust initiatives, and how to best overcome them.
+Let’s dive in, and start our work of bringing all these ideas together into a coherent
+whole.
+
+CHAPTER 17
+
+A Zero Trust Policy Model
+Policies are at the heart of Zero Trust—after all, its primary architectural components
+are Policy Decision Points and Policy Enforcement Points. The term policy is heavily
+overloaded in the English language, of course, with meanings at many different levels. In
+our Zero Trust world, policies are the structures created by organizations to define which
+identities are permitted to get access to which resources, under which circumstances.
+Recall that within a Zero Trust environment, access can only be obtained through the
+evaluation and assignment of a policy to an identity, and that access may be enforced at
+the network or application levels.
+The actual, technical, means by which policies are defined and enforced will be
+product- and implementation-dependent, but the concepts and components are
+universal, and should be pervasive in any Zero Trust system. The NIST Zero Trust
+document states “policy is the set of access rules based on attributes that an organization
+assigns to a subject, data asset, or application,”1 and one of the NIST core tenets is that
+“access to resources is determined by dynamic policy—including the observable state
+of client identity, application/service, and the requesting asset—and may include other
+behavioral and environmental attributes.”2 Recall from our working definition in Chapter 2,
+Zero Trust must “enable the dynamic enforcement of security policies.”
+As we introduced briefly in Chapter 3, we’re adding structure and specificity to
+the policy discussion, extending some of the concepts within the NIST Zero Trust
+framework. We’re also weaving in and leveraging industry concepts around Attribute-­
+Based Access Control (ABAC), re-interpreting them from the perspective of Zero Trust.
+Our goal with this chapter is to provide you with a framework and a structure with
+which you can think about the scope of your Zero Trust system, and with which to
+evaluate vendor platforms. Zero Trust systems can be nearly infinite in breadth and
+depth, and it’s important for you to have a strong sense of what should and shouldn’t
+
+ IST Zero Trust Architecture, page 6
+N
+Ibid
+
+1
+2
+
+© Jason Garbis and Jerry W. Chapman 2021
+J. Garbis and J. W. Chapman, Zero Trust Security, https://doi.org/10.1007/978-1-4842-6702-8_17
+
+211
+
+

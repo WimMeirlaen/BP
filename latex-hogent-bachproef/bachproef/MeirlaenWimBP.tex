@@ -1,4 +1,4 @@
-%===============================================================================
+﻿%===============================================================================
 % LaTeX sjabloon voor de bachelorproef toegepaste informatica aan HOGENT
 % Meer info op https://github.com/HoGentTIN/latex-hogent-report
 %===============================================================================
@@ -12,48 +12,64 @@
 %   explicit approval!), remove the option "dutch," or replace with "english".
 
 \usepackage{lipsum} % For blind text, can be removed after adding actual content
+\usepackage{float}
 
 %% Pictures to include in the text can be put in the graphics/ folder
 \graphicspath{{../graphics/}}
 
-%% For source code highlighting, requires pygments to be installed
-%% Compile with the -shell-escape flag!
-%% \usepackage[chapter]{minted}
-%% If you compile with the make_thesis.{bat,sh} script, use the following
-%% import instead:
-\usepackage[chapter,outputdir=../output]{minted}
-\usemintedstyle{solarized-light}
+%% Source code listings
+\usepackage{listings}
+\usepackage{newfloat}
+\usepackage{xcolor}
 
-%% Formatting for minted environments.
-\setminted{%
-    autogobble,
+\lstdefinelanguage{PowerShell}{
+    morekeywords=[1]{if,else,elseif,foreach,for,while,do,switch,return,function,param,begin,process,end,break,continue,try,catch,finally,throw,trap},
+    morekeywords=[2]{Write-Host,Write-Verbose,Write-Warning,Write-Error,Get-Content,Set-Content,Import-Csv,Export-Csv,Select-Object,Where-Object,Sort-Object,ForEach-Object,Get-ChildItem,Test-Path,Join-Path,Split-Path,New-Item,Copy-Item,Connect-MgGraph,Get-MgSite},
+    morekeywords=[3]{true,false,null},
+    sensitive=false,
+    morestring=[b]"
+    morestring=[b]',
+    morecomment=[l]{\#},
+    alsoletter={-},
+}
+\lstset{%
+    language=PowerShell,
+    basicstyle=\ttfamily\small,
+    keywordstyle=[1]\color[HTML]{859900}\bfseries,
+    keywordstyle=[2]\color[HTML]{268BD2},
+    keywordstyle=[3]\color[HTML]{CB4B16},
+    stringstyle=\color[HTML]{2AA198},
+    commentstyle=\color[HTML]{93A1A1}\itshape,
+    identifierstyle=\color[HTML]{657B83},
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
     frame=lines,
-    breaklines,
-    linenos,
-    tabsize=4
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=5pt,
+    tabsize=4,
+    xleftmargin=2em,
+    framexleftmargin=1.5em,
 }
-
-%% Ensure the list of listings is in the table of contents
-\renewcommand\listoflistingscaption{%
-    \IfLanguageName{dutch}{Lijst van codefragmenten}{List of listings}
-}
-\renewcommand\listingscaption{%
-    \IfLanguageName{dutch}{Codefragment}{Listing}
-}
+\providecommand{\listoflistingscaption}{\IfLanguageName{dutch}{Lijst van codefragmenten}{List of listings}}
+\providecommand{\listingscaption}{\IfLanguageName{dutch}{Codefragment}{Listing}}
+\DeclareFloatingEnvironment[fileext=lol,listname={\listoflistingscaption},name={\listingscaption}]{listing}
+\makeatletter
+\let\hogent@listoflistings\listoflistings
 \renewcommand*\listoflistings{%
     \cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{\listoflistingscaption}%
-    \listof{listing}{\listoflistingscaption}%
+    \hogent@listoflistings
 }
-
-% Other packages not already included can be imported here
-
+\makeatother
 %%---------- Document metadata -------------------------------------------------
 % TODO: Replace this with your own information
-\author{Ernst Aarden}
-\supervisor{Dhr. F. Van Houte}
-\cosupervisor{Mevr. S. Beeckman}
-\title[Optionele ondertitel]%
-    {Titel van de bachelorproef}
+\author{Wim Meirlaen}
+\supervisor{Dhr. A. Veldeman}
+\cosupervisor{Dhr. K De Jaeger}
+\title{Optimalisatie en uniformering van documentatie\texorpdfstring{\\}{}binnen Modern Workplace Infrastructure bij ESC bv}
 \academicyear{\advance\year by -1 \the\year--\advance\year by 1 \the\year}
 \examperiod{1}
 \degreesought{\IfLanguageName{dutch}{Professionele bachelor in de toegepaste informatica}{Bachelor of applied computer science}}
@@ -61,7 +77,7 @@
 %\institution{Internshipcompany BVBA.}
 
 %% Add global exceptions to the hyphenation here
-\hyphenation{back-slash}
+\hyphenation{back-slash app-registratie}
 
 %% The bibliography (style and settings are  found in hogentthesis.cls)
 \addbibresource{bachproef.bib}            %% Bibliography file
@@ -72,6 +88,9 @@
 \renewcommand{\cleardoublepage}{\clearpage}
 
 \renewcommand{\arraystretch}{1.2}
+\setlength{\emergencystretch}{2em}
+\hbadness=10000
+\vbadness=10000
 
 %% Content starts here.
 \begin{document}

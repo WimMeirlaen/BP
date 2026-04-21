@@ -1,86 +1,97 @@
 %==============================================================================
 % Sjabloon poster bachproef
 %==============================================================================
-% Gebaseerd op document class `a0poster' door Gerlinde Kettl en Matthias Weiser
-% Aangepast voor gebruik aan HOGENT door Jens Buysse en Bert Van Vreckem
 
 \documentclass[a0,portrait]{hogent-poster}
 
-% Info over de opleiding
 \course{Bachelorproef}
 \studyprogramme{toegepaste informatica}
-\academicyear{2022-2023}
+\academicyear{2025-2026}
 \institution{Hogeschool Gent, Valentin Vaerwyckweg 1, 9000 Gent}
 
-% Info over de bachelorproef
-\title{Titel van uw bachelorproef}
-\subtitle{Ondertitel (eventueel)}
-\author{Voornaam Naam}
-\email{voornaam.familienaam@student.hogent.be}
-\supervisor{Voornaam Naam}
-\cosupervisor{Voornaam Naam (Bedrijf)}
+\title{Optimalisatie en uniformering van documentatie binnen Modern Workplace Infrastructure bij ESC bv}
+\subtitle{Geautomatiseerde migratie van Microsoft OneNote naar Remote Desktop Manager}
+\author{Wim Meirlaen}
+\email{wim.meirlaen@student.hogent.be}
+\supervisor{Dhr. A. Veldeman}
+\cosupervisor{Dhr. K. De Jaeger (E.S.C. BV)}
 
-% Indien ingevuld, wordt deze informatie toegevoegd aan het einde van de
-% abstract. Zet in commentaar als je dit niet wilt.
 \specialisation{Systeem- en Netwerkbeheer}
-\keywords{Lambda-calculus, Scheme}
-\projectrepo{https://github.com/user/repo}
+\keywords{OneNote, Remote Desktop Manager, Microsoft Graph API, PowerShell, migratie, PAM}
+\projectrepo{https://github.com/WimMeirlaen/BP}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-It's only a model.
-You don't vote for kings. Who's that then? We found them. Ni! Ni! Ni! Ni!
-The nose? On second thoughts, let's not go there. It is a silly place. Bloody Peasant! And the hat. She's a witch! Where'd you get the coconuts?
+E.S.C.\ BV beheert klantdocumentatie voor honderden klanten in Microsoft OneNote, verspreid over meerdere SharePoint-locaties per klant. Dit leidt tot zoekproblemen, ontbrekende toegangscontrole en veiligheidsrisico's. Na de overstap naar Remote Desktop Manager (RDM) werd een geautomatiseerde PowerShell-migratiepipeline ontwikkeld via Microsoft Graph API, gevalideerd voor meerdere klantvaults in productie.
 \end{abstract}
 
-\begin{multicols}{2} % This is how many columns your poster will be broken into, a portrait poster is generally split into 2 columns
+\begin{multicols}{2}
 
-\section{Introductie}
+\section{Probleemstelling}
 
-Be quiet! Found them? In Mercia?! The coconut's tropical! But you are dressed as one… Well, what do you want? Knights of Ni, we are but simple travelers who seek the enchanter who lives beyond these woods.
+Klantdocumentatie bij E.S.C.\ BV is verspreid over \textbf{drie SharePoint-locaties} per klant:
 
-Well, what do you want? It's only a model. Camelot! We found them. We shall say `Ni' again to you, if you do not appease us.
+\begin{itemize}
+  \item Medewerkers moeten op drie plaatsen zoeken zonder garantie alles te vinden
+  \item Credentials staan als \textbf{platte tekst} — geen versleuteling of logging per item
+  \item \textbf{Least-privilege} niet haalbaar: toegang tot een site = toegang tot alle inhoud
+\end{itemize}
 
-The nose? Shut up! Burn her! I am your king. You don't vote for kings.
+\textbf{Remote Desktop Manager (RDM)} biedt vaults per klant met toegangscontrole en auditlogging, in lijn met PAM-principes.
 
-You can't expect to wield supreme power just `cause some watery tart threw a sword at you! Well, we did do the nose. I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave before I am forced to taunt you a second time!
+\section{Onderzoeksvraag}
 
-Why do you think that she is a witch? We want a shrubbery!! I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave before I am forced to taunt you a second time!
+Hoe kan klantinformatie \textbf{geautomatiseerd, veilig en schaalbaar} worden gemigreerd van Microsoft OneNote naar Remote Desktop Manager, rekening houdend met API-beperkingen en beveiligingsvereisten?
 
-\section{Experimenten}
+\section{Methode}
 
-A newt? Camelot! Why? No, no, no! Yes, yes. A bit. But she's got a wart.
+Drie extractiemethoden werden geëvalueerd. Microsoft Graph API werd gekozen wegens betrouwbaarheid en schaalbaarheid; COM-automatisering bleek geblokkeerd door beveiligingsbeleid; handmatige export is niet haalbaar bij honderden klanten.
 
-Shut up! I dunno. Must be a king. Who's that then? Look, my liege! On second thoughts, let's not go there. It is a silly place.
+Authenticatie via \textbf{Entra~ID} met device code flow en gedelegeerde permissies — geen clientgeheim in het script.
 
-Shut up! Will you shut up?! No, no, no! Yes, yes. A bit. But she's got a wart. He hasn't got shit all over him. It's only a model. It's only a model.
-
-Bring her forward! I don't want to talk to you no more, you empty-headed animal food trough water! I fart in your general direction! Your mother was a hamster and your father smelt of elderberries! Now leave 
-
-\section{Sectie met figuur}
-
-De {\LaTeX} figure-omgeving bepaalt zelf waar een afbeelding komt en dat is meestal niet op de plek in de tekst waar de figure-omgeving gedefinieerd wordt. Als je wilt forceren dat afbeeldingen toch in de flow van de tekst blijven, dan kan je dat zoals hieronder:
+\section{Architectuur van de pipeline}
 
 \begin{center}
+\begin{minipage}{\linewidth}
+  \centering
+  \includegraphics[width=1.0\linewidth]{fig-06-two-phase-architectuur}
   \captionsetup{type=figure}
-  \includegraphics[width=1.0\linewidth]{grail}
-  \captionof{figure}{He hasn't got shit all over him. The nose? Where'd you get the coconuts? What do you mean? We shall say `Ni' again to you, if you do not appease us}
+  \captionof{figure}{Two-phase architectuur: exportketen (links) en importketen (rechts)}
+\end{minipage}
 \end{center}
 
-Let er wel op dat dit tot problemen met bladschikking kan leiden.
+\begin{itemize}
+  \item \textbf{Export}: haalt tekst, afbeeldingen en bijlagen op via Graph API
+  \item \textbf{Deduplicatie}: per sectie/paginatitel enkel de meest recente versie bewaard
+  \item \textbf{Throttlingbeheer}: circuit breaker en exponentiële back-off
+  \item \textbf{Import}: plaatst HTML-bestanden in de juiste klantvault via Devolutions.PowerShell; structuur en inhoud blijven doorzoekbaar in RDM
+\end{itemize}
 
-\section{Conclusies}
+\section{Resultaten}
 
-Don't underestimate the Force. Oh God, my uncle. How am I ever gonna explain this? I suggest you try it again, Luke. This time, let go your conscious self and act on instinct. Don't be too proud of this technological terror you've constructed. The ability to destroy a planet is insignificant next to the power of the Force.
+\begin{itemize}
+  \item Volledige export van tekst, afbeeldingen en bijlagen over meerdere SharePoint-sites
+  \item Stabiele batchverwerking van meerdere klantvaults \textbf{zonder gebruikersinput}
+  \item Handmatig inlogproces (Teams-lidmaatschap, sites zoeken) volledig geautomatiseerd
+\end{itemize}
 
-\section{Toekomstig onderzoek}
+\begin{center}
+\begin{minipage}{\linewidth}
+  \centering
+  \includegraphics[width=0.90\linewidth]{boomstructuur}
+  \captionsetup{type=figure}
+  \captionof{figure}{OneNote-hiërarchie (secties, pagina's) herkenbaar terug in RDM}
+\end{minipage}
+\end{center}
 
-I care. So, what do you think of her, Han? No! Alderaan is peaceful. We have no weapons. You can't possibly… I have traced the Rebel spies to her. Now she is my only link to finding their secret base.
+\section{Conclusie}
 
-Kid, I've flown from one side of this galaxy to the other. I've seen a lot of strange stuff, but I've never seen anything to make me believe there's one all-powerful Force controlling everything. There's no mystical energy field that controls my destiny. It's all a lot of simple tricks and nonsense. You are a part of the Rebel Alliance and a traitor! Take her away! 
+Geautomatiseerde migratie van OneNote naar RDM is \textbf{technisch haalbaar}. Deduplicatie, throttlingbeheer en structuurbehoud maken het verschil tussen een experimenteel script en een productieoplossing. Het resultaat biedt een directe basis voor bedrijfsbrede uitrol en is relevant voor IT-dienstverleners met gelijkaardige migratienoden.
+
+\textit{Vervolgonderzoek:} fijnmazigere API-permissies, AI-gestuurde categorisatie (lokaal taalmodel).
 
 \end{multicols}
 \end{document}

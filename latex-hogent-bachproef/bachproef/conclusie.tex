@@ -14,5 +14,16 @@
 % Heeft het onderzoek geleid tot nieuwe vragen die uitnodigen tot verder 
 %onderzoek?
 
-\lipsum[76-80]
+Deze bachelorproef laat zien dat een geautomatiseerde migratie van OneNote naar RDM binnen E.S.C. BV technisch haalbaar is, als de aanmelding goed is opgezet, throttling correct wordt afgehandeld en de importflow duidelijk blijft. De ontwikkelde pipeline zet verspreide OneNote-inhoud om naar een centralere en beter beheersbare RDM-structuur, in lijn met PAM-principes zoals least privilege, logging en gecontroleerde toegang.
+
+Een belangrijke meerwaarde zit in de deduplicatiestap. Door dubbele en driedubbele pagina's vooraf te detecteren en alleen de meest recente versie te exporteren, wordt minder data verwerkt en is de kans kleiner dat er dubbele of tegenstrijdige informatie in RDM belandt. Tegelijk blijkt wel dat die aanpak alleen goed werkt als de discoveryfase alle relevante SharePoint-sites per klant meeneemt. Een pagina kan immers op één site bestaan en op een andere site ontbreken. Pas wanneer eerst alles volledig wordt gescand en daarna pas wordt gededupliceerd, ontstaat een betrouwbaar resultaat.
+
+Ook de structuur van de bron speelt een grote rol. OneNote is historisch gegroeid in een flexibele maar losse vorm, terwijl RDM meer expliciete ordening vraagt. Dat is tegelijk een voordeel en een uitdaging: de vaste structuur maakt documentatie beter beheerbaar, maar vraagt wel dat bestaande informatie zorgvuldig wordt overgezet. De waarde van de ontwikkelde pipeline zit dus vooral in het bewaren van die structuur. Ze verplaatst niet gewoon bestanden, maar zet losse OneNote-informatie om in een overzichtelijke eindstructuur in RDM.
+
+Daaruit volgt ook dat automatisering in zo'n migratie vooral nuttig is wanneer ze herhalende taken overneemt die anders veel tijd kosten of foutgevoelig zijn. Deduplicatie, boomstructuurbehoud, bestandstypeherkenning en gefaseerde uitrol zijn daar goede voorbeelden van. Geen van die onderdelen is op zichzelf spectaculair, maar samen maken ze het verschil tussen een losse test en een workflow die echt bruikbaar is in productie. De meerwaarde van dit werk zit dus minder in één apart script dan in de combinatie van keuzes die samen een stabiele aanpak vormen.
+
+Voor verder werk zijn er nog duidelijke verbeterpunten. Denk aan een nauwkeurigere afbakening van permissies, meer automatisering van categorisatie zonder privacyverlies, en betere opvolging van lange migratiebatches. Als die punten verder worden uitgewerkt, kan de huidige proof-of-concept nog robuuster worden. Binnen de scope van deze bachelorproef is alvast aangetoond dat de basisaanpak klopt en dat de migratie technisch en organisatorisch verdedigbaar is.
+
+Tot slot is het resultaat bruikbaar als vertrekpunt voor gelijkaardige migraties binnen de organisatie. De keuzes rond structuurbehoud, deduplicatie, permissiemodel en nazorg vormen een duidelijke basis voor toekomstige documentatiemigraties bij E.S.C. BV. De kern blijft daarbij eenvoudig: een migratie is pas echt geslaagd als de informatie niet alleen verplaatst wordt, maar ook vlot bruikbaar blijft in het doelplatform.
+
 

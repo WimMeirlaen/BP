@@ -1,0 +1,176 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram name="Page-1" id="_2RXSY9io_3kHoqzYDmM">
+    <mxGraphModel dx="2066" dy="1201" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-26" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="1. Selectie RDM-datasource" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-28" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="2. Selectie vaults" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-30" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="3. Selectie doelmappen" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-37" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="4. CSV selectie sites" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="5.1 Verbinden MS Graph" vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="5.2 scannen sites (hiërarchie + deduplicatie)" vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-8" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="HTTP 429" vertex="1">
+          <mxGeometry height="80" width="80" x="440" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Ja" vertex="1">
+          <mxGeometry height="30" width="60" x="500" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="30 minuten cooldown" vertex="1">
+          <mxGeometry height="60" width="120" x="570" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="5.3 Start export" vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-12" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="sites gevonden" vertex="1">
+          <mxGeometry height="80" width="80" x="60" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="manuele invoer zoekterm" vertex="1">
+          <mxGeometry height="60" width="120" x="180" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-14" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-13" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="440" />
+            </Array>
+            <mxPoint x="500" y="640" as="sourcePoint" />
+            <mxPoint x="550" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-15" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-12" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="500" y="640" as="sourcePoint" />
+            <mxPoint x="550" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-16" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-12" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-13" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="310" />
+            </Array>
+            <mxPoint x="500" y="640" as="sourcePoint" />
+            <mxPoint x="550" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="nee" vertex="1">
+          <mxGeometry height="30" width="60" x="130" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="ja" vertex="1">
+          <mxGeometry height="30" width="60" x="60" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-19" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-10" style="endArrow=classic;html=1;rounded=0;exitX=0.45;exitY=-0.017;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-11" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="624" y="680" />
+            </Array>
+            <mxPoint x="880" y="640" as="sourcePoint" />
+            <mxPoint x="930" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-20" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-8" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="880" y="640" as="sourcePoint" />
+            <mxPoint x="930" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-21" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-11" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-8" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="880" y="640" as="sourcePoint" />
+            <mxPoint x="930" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-56" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="8. Export summary" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-42" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="nee" vertex="1">
+          <mxGeometry height="30" width="60" x="420" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-25" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-7" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-11" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="880" y="640" as="sourcePoint" />
+            <mxPoint x="930" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-27" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-6" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-7" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="880" y="640" as="sourcePoint" />
+            <mxPoint x="930" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-53" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-31" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="5. Start export loop per vault" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-39" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-35" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="5. Queue review en bevestiging" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-49" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-40" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="5.4 Toon result" vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-48" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-57" edge="1" parent="1" source="KRYMB1ZFwP2OMajU5yxe-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="KRYMB1ZFwP2OMajU5yxe-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="710" y="990" />
+              <mxPoint x="710" y="520" />
+            </Array>
+            <mxPoint x="750" y="985" as="sourcePoint" />
+            <mxPoint x="750" y="515" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-43" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="volgende item in queue" vertex="1">
+          <mxGeometry height="120" width="120" x="420" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-46" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="nee" vertex="1">
+          <mxGeometry height="30" width="60" x="380" y="955" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-50" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="ja" vertex="1">
+          <mxGeometry height="30" width="60" x="510" y="955" as="geometry" />
+        </mxCell>
+        <mxCell id="KRYMB1ZFwP2OMajU5yxe-54" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="9. Update completed-customers list" vertex="1">
+          <mxGeometry height="60" width="120" x="40" y="910" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
